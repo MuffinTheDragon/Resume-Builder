@@ -7,3 +7,5 @@
 | Hillary Tang                	| tanghill 	| 1005298241 	| hillary.tang@mail.utoroto.ca               	| Discord - ahappihill#7477      	|
 | Chris Wan                   	| wanchri4 	| 1005244040 	| chriswan.wan@mail.utoronto.ca              	| Discord - YerYer#1922          	|
 | Akshit Goyal                	| goyalak2 	| 1005095068 	| akshit.goyal@mail.utoronto.ca              	| Discord - Akshit#2438          	|
+
+Discord Link: https://discord.gg/2Qzqac5szb
