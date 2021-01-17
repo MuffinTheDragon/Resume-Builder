@@ -7,3 +7,5 @@ Dhaval Malhotra                malho192    1005156082  dhaval.malhotra@mail.utor
 Ethan Chung                    chunget1    1005253850  ethan.chung@mail.utoronto.ca                Discord - Castanix#7040
 
 Michael Chan                   chanmi43    1003137580  rendra.chan@mail.utoronto.ca                Discord - Chanoodle#4444
+
+Hillary Tang                   tanghill    1005298241 hillary.tang@mail.utoroto.ca                 Discord - ahappihill#7477
