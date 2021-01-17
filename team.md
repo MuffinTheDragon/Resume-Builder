@@ -9,3 +9,5 @@ Ethan Chung                    chunget1    1005253850  ethan.chung@mail.utoronto
 Michael Chan                   chanmi43    1003137580  rendra.chan@mail.utoronto.ca                Discord - Chanoodle#4444
 
 Hillary Tang                   tanghill    1005298241 hillary.tang@mail.utoroto.ca                 Discord - ahappihill#7477
+
+Chris Wan                      wanchri4    1005244040  chriswan.wan@mail.utoronto.ca                Discord - YerYer#1922
