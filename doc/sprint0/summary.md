@@ -18,9 +18,6 @@
 - Beginner Friendly
     - If a user is a beginner to resumes/PEY/job applications, the app should be able to help guide and teach the user!
     
-## User Experience (not sure where else to put this)
-https://xd.adobe.com/view/df977f19-82e4-41e8-85e0-f8f052fa7e17-8ac4/
-    
 ## Extra Information (For Future Reference)
 - Problem space/Audience 
     - UofT PEY Students
