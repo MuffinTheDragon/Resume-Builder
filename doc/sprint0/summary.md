@@ -3,18 +3,25 @@
 - Objective: Develop a resume builder web app that helps University of Toronto students, specifically ones pursuing PEY, create their resumes to their liking. The application will ask the user to input their information and generate a resume which can be exported as PDFs.
 
 ## Key users
-- PEY Peter - Peter is a 3rd year CS Specialist who wants to go on PEY next year. He has completed one internship before, is a part of the Computer Science Student Community (CSSC), and has developed many side projects. 
-- Internship Isabella - Isabella is a 2nd year CS major/Stats major who is seeking a summer internship this coming summer. She has never applied to any jobs and only has a couple course projects.
+- PEY Peter - Peter is a 3rd year CS Specialist who wants to go on PEY next year. He has completed one internship before, is a part of the Computer Science Student Community (CSSC), and has developed many side projects.
+- Internship Isabella - Isabella is a 2nd year CS major/Stats major who is seeking an internship for this coming summer. She has never applied to any jobs and only has a couple course projects.
 
 ## Key use scenarios
 - Peter needs to update his resume in order to start applying for PEY. Having just completed a summer internship and recently joining CSSC, he wants to add these to his resume along with all the side projects he has worked on. He needs help organizing all this information.
-- Isabella has been working hard in her classes but she has heard about how valuable internships are. She wants to apply for a summer internship but has never created a resume, nevermind having job experience! She’s only completed class projects and needs help deciding what to put on her first resume.
+- Isabella has been working hard in her classes but she has heard about how valuable internships are. She wants to apply for a summer internship but has never created a resume, nevermind having job experience! She’s only completed class projects and needs help deciding what to put on her first resume while also having the freedom to alter the design to her liking.
 
 ## Key principles
 - Efficiency
     - The app should minimize as much work for the user as possible.
 - Feedback 
     - Users should receive visual feedback as they modify their resume
+- Beginner Friendly
+    - If a user is a beginner to resumes/PEY/job applications, the app should be able to help guide and teach the user!
+    
+## User Experience (not sure where else to put this)
+https://xd.adobe.com/view/df977f19-82e4-41e8-85e0-f8f052fa7e17-8ac4/
+    
+## Extra Information (For Future Reference)
 - Problem space/Audience 
     - UofT PEY Students
 - Focus on design vs. content?
@@ -25,7 +32,7 @@
     - Accounts to save your resumes (complete or incomplete)
     - Export as pdf 
     - Start with 2 templates
-        - Prior internship templae
+        - Prior internship template
         - Projects based template
 
 ## Nice to haves
