@@ -1,14 +1,14 @@
 import React from "react";
 import "./style.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
 
 function Personal() {
     return (
         <div class="editmenu">
             <form>
                 <div class="personal">
-                    <h3>Personal <FontAwesomeIcon icon={faCoffee} /></h3>
+                    <h3>Personal <FontAwesomeIcon icon={faUser} /></h3>
                     <div class="form-row">
                         <div>
                             <label for="fname">First name</label><br></br>
