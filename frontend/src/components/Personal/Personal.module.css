@@ -12,7 +12,7 @@ input {
     padding: 1rem;
 }
 
-.form-row {
+.formRow {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -23,6 +23,6 @@ input {
     margin: .5rem 1.5rem;
 }
 
-.editmenu {
-    width: 35%;
+hr {
+    width: 100%;
 }
