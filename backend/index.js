@@ -1,27 +1,19 @@
-// import firebase from "./firebase/app";
-// import "firebase/auth";
-// import "firebase/firestore";
+const firebase = require("firebase");
 
-import("firebase/app")
-
-// var firebase = require("firebase/app");
-
-// require("firebase/auth");
-// require("firebase/database");
-
-var firebaseConfig = {
-    apiKey: "AIzaSyC5eLpvIwCfHHxiodlURX_R3-b2zNt9_AM",
-    authDomain: "cheddar-f2198.firebaseapp.com",
-    databaseURL: "https://cheddar-f2198-default-rtdb.firebaseio.com/",
-    projectId: "cheddar-f2198",
-    storageBucket: "cheddar-f2198.appspot.com",
-    messagingSenderId: "201376326453",
-    appId: "1:201376326453:web:cbb6e7d3c23f686970e27c",
-    // measurementId: "G-D3KQ2YP49X"
+const firebaseConfig = {
+    apiKey: `${process.env.REACT_APP_FIREBASE_API_KEY}`,
+    authDomain: `${process.env.REACT_APP_FIREBASE_AUTH_DOMAIN}`,
+    projectId: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}`,
+    storageBucket: `${process.env.REACT_APP_FIREBASE_STORAGE_BUCKET}`,
+    messagingSenderId: `${process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID}`,
+    appId: `${process.env.REACT_APP_FIREBASE_APP_ID}`
 };
 
+var fire_app = firebase.initializeApp(firebaseConfig);
 
-var app = firebase.initializeApp(firebaseConfig);
+const db = fire_app.firestore();
 
-console.log(app);
+
+
+
 
