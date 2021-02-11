@@ -1,4 +1,4 @@
-const firebase = require("firebase");
+// Middleware for parsing request bodies
 const express = require('express')
 const bodyParser = require('body-parser');
 
@@ -6,24 +6,24 @@ const app = express();
 app.use(bodyParser.json());
 const port = 8000;
 
-const firebaseConfig = {
-    apiKey: `${process.env.REACT_APP_FIREBASE_API_KEY}`,
-    authDomain: `${process.env.REACT_APP_FIREBASE_AUTH_DOMAIN}`,
-    projectId: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}`,
-    storageBucket: `${process.env.REACT_APP_FIREBASE_STORAGE_BUCKET}`,
-    messagingSenderId: `${process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID}`,
-    appId: `${process.env.REACT_APP_FIREBASE_APP_ID}`
-};
 
-var fire_app = firebase.initializeApp(firebaseConfig);
+// Initializing Firebase with the admin SDK
+const admin = require("firebase-admin");
+const serviceAccount = require("./serviceAccountTemplatesKey.json");
 
-const db = fire_app.firestore();
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+});
 
+const db = admin.firestore();
+
+// GET api for retrieving the preset resume templates on Firebase
 app.get("/Templates", async (req, res) => {
 
     try {
         let collection = req.body.collection
         let document = req.body.document
+        console.log(req.body.collection);
 
         let templates = []
 
@@ -44,6 +44,7 @@ app.get("/Templates", async (req, res) => {
     }
 })
 
+// Listening for api calls
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
