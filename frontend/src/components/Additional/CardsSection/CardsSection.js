@@ -15,7 +15,6 @@ let CardsSection = (props) => {
             {cards}
         </div>
     )
-
 };
 
 export default CardsSection;
