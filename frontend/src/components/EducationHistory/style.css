@@ -1,3 +1,7 @@
+.editmenu {
+    width: 35%;
+}
+
 .education {
     display: flex;
     flex-wrap: wrap;

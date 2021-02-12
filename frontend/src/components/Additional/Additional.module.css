@@ -1,0 +1,10 @@
+.additional {
+    width: 100%;
+    padding: 1rem;
+}
+
+.additionalItems {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}

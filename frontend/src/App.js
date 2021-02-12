@@ -1,7 +1,9 @@
 import React from "react";
 import "./style.css";
-import Personal from "./components/Personal/Personal.js"
-import EducationHistory from "./components/EducationHistory/EducationHistory.js"
+import Personal from "./components/Personal/Personal"
+import Additional from "./components/Additional/Additional";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import EducationHistory from "./components/EducationHistory/EducationHistory"
 
 function App() {
     return (
@@ -9,6 +11,7 @@ function App() {
             Resume Builder
             <Personal />
             <EducationHistory />
+            <Additional />
         </div>
     );
 }
