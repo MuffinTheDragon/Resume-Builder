@@ -2,9 +2,9 @@ import React from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import styles from "./Item.module.css";
 
-function Item(props) {
+let Item = (props) => {
     return (
-        <div class={styles.item}>
+        <div onClick={props.addNewSection} class={styles.item}>
             <div class={styles.icon}>
                 <FontAwesomeIcon icon={props.icon} size={"2x"}/>
             </div>

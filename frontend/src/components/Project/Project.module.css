@@ -1,0 +1,48 @@
+.project {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    padding: 1rem;
+    border: 1px black solid;
+}
+
+.formRow {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.formRow div {
+    padding-right: 1.3rem;
+    padding-bottom: 1rem;
+}
+
+.submit {
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+.submit div {
+    padding-right: 1rem;
+}
+
+.accept {
+    color: green;
+}
+
+.accept:hover {
+    color: #8fb68f;
+    cursor: grab;
+}
+
+.decline {
+    color: red;
+}
+
+.decline:hover {
+    color: #db7575;
+    cursor: grab;
+}
