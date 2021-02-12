@@ -1,0 +1,23 @@
+h3 {
+    margin-top: 1rem;
+}
+div h4 {
+    font-size: 1rem;
+}
+.add-menu {
+    display: flex;
+    margin: 1.5rem 0;
+}
+.add-internship,
+.add-job {
+    border: solid 1px #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 0.5rem;
+    margin: 0 0.5rem;
+    box-shadow: 1px 1px 0.2rem #000;
+}
