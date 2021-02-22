@@ -7,7 +7,7 @@ function AchievementsRender(props) {
     const titles = props.title;
     const arr = titles.map((title, index) => {
         return (
-            <div class="block">
+            <div class="block" key={index}>
                 <div class="trophy"><FontAwesomeIcon icon={faTrophy} /></div>
                 <div>
                     <h4 class="title">{title}</h4>

@@ -18,7 +18,7 @@ function App() {
             <Additional />
             <EducationHistoryRender school="University of Toronto" degree="H.B.Sc Computer Science & Statistics" date="Sept 2015 - June 2020" gpa="3.7"/>
             <hr></hr>
-            <AchievementsRender count="2" title={['Dean\'s List (2018-2020)', 'Honorable Mention (Top 20)']} desc={['GPA of 3.50 or above', 'Adobe Creative Jams, 3 times']} />
+            <AchievementsRender title={['Dean\'s List (2018-2020)', 'Honorable Mention (Top 20)']} desc={['GPA of 3.50 or above', 'Adobe Creative Jams, 3 times']} />
         </div>
     );
 }
