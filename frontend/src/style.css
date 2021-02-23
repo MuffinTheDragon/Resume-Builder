@@ -4,7 +4,23 @@ body {
     color: #394E58;
 }
 
-h3 {
+.w-35 {
+    width: 65%;
+}
+
+#editor h3 {
     color: #17242A;
     font-size: 1.5rem;
+}
+
+#editor hr {
+    width: 100%;
+    background-color: #17242A;
+}
+
+#resumeRender {
+    width: 50%;
+    margin: 50px;
+    -webkit-box-shadow: 5px 5px 15px 5px #535353; 
+    box-shadow: 5px 5px 15px 5px #535353;
 }

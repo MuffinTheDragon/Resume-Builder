@@ -1,5 +1,6 @@
 import React from "react";
 import "./style.css";
+import shared from "../Shared.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSchool } from '@fortawesome/free-solid-svg-icons'
 import Select from 'react-select';
@@ -45,11 +46,12 @@ const customStyles = {
 
 function EducationHistory() {
     return (
-        <div class="editmenu">
+        <div class={shared.editmenu}>
             <form>
                 <div class="education">
                     <h3>Education History <FontAwesomeIcon icon={faSchool} /></h3>
-                    <div class="form-row">
+                    <hr/>
+                    <div class={shared.formRow}>
                         <div>
                             <label for="school">School</label><br></br>
                             <input type="text" id="school" name="school"></input>
@@ -59,7 +61,7 @@ function EducationHistory() {
                             <input type="text" id="degree" name="degree"></input>
                         </div>
                     </div>
-                    <div class="form-row">
+                    <div class={shared.formRow}>
                         <div>
                             <label for="start_date">Start Date</label><br></br>
                             <input type="number" id="start_date" name="start_date" min="0"></input>
