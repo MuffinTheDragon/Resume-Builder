@@ -6,6 +6,7 @@ import Additional from "./components/Additional/Additional";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import EducationHistory from "./components/EducationHistory/EducationHistory"
 import JobExperienceResume from "./components/ResumeTemplates/JobExperienceResume/JobExperienceResume"
+import JobExpPersonal from "./components/JobExperienceResume/JobExpPersonal";
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                 <Additional />
             </div>
             <div id="resumeRender">
+                <JobExpPersonal />
                 <JobExperienceResume />
             </div>
         </div>
