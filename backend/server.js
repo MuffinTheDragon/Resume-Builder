@@ -75,6 +75,21 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
+var passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth').OAuthStrategy;
 
+// Use the GoogleStrategy within Passport.
+
+passport.use(new GoogleStrategy({
+    consumerKey: 698522005806-v4bt4q4fje7omd7qs6pj9n6v721bh6gt.apps.googleusercontent.com,
+    consumerSecret: PlQYJxHy2oR-wOdt8ENI1vbJ,
+    callbackURL: "http://localhost:5000/google/callback"
+  },
+  function(token, tokenSecret, profile, done) {
+      User.findOrCreate({ googleId: profile.id }, function (err, user) {
+        return done(err, user);
+      });
+  }
+));
 
 
