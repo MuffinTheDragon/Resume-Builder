@@ -20,7 +20,13 @@ const Resume = ({resume}) => {
     };
 
     let component;
-    for (let key in resume) {
+    for (let key in resume) { 
+        if (key !== "Personal" && resume[key].length !== 0){
+            let header = key.replace(/([A-Z])/g, ' $1').replace(/^./, ((str) => {
+                return str.toUpperCase();
+            }));
+            resumeComponents[key].push(<HeaderTemplate header={header}/>)
+        }
         for (let i=0; i < resume[key].length; i++){
             let data = resume[key][i];
             let isCollection = false;
@@ -54,19 +60,13 @@ const Resume = ({resume}) => {
             <PersonalTemplate name={resume.Personal.name} email={resume.Personal.email} telephone={resume.Personal.telephone} linkedin={resume.Personal.linkedin} github={resume.Personal.github}/>
             <div class="d-flex pl-5 pr-5 pb-5">
                 <div class={"mr-3 " + styles.w65}>
-                    <HeaderTemplate header="Experience"/>
-                    {resumeComponents.Experience}   
-                    <HeaderTemplate header="Projects"/>
+                    {resumeComponents.Experience}
                     {resumeComponents.Projects}
                 </div>
                 <div class={styles.w35}>
-                    <HeaderTemplate header="Education"/>
                     {resumeComponents.EducationHistory}
-                    <HeaderTemplate header="Achievements"/>
                     {resumeComponents.Achievements}     
-                    <HeaderTemplate header="Skills"/>
                     {resumeComponents.Skills}
-                    <HeaderTemplate header="Course Work"/>
                     {resumeComponents.CourseWork}
 
                 </div>
