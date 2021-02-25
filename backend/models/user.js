@@ -47,10 +47,13 @@ UserSchema.statics.findOrCreate = function(googleId, email, displayName) {
             if(!new_user){
                 return Promise.reject()  // a rejected promise
             }
+            // console.log("New User Created!")
             return Promise.resolve(new_user);
 		}
-		// if the user exists, make sure their password is correct
-		return new Promise.resolve(user);
+		// if the user exists, return the user
+        // console.log("User Exists!")
+		// console.log(user)
+		return Promise.resolve(user);
 	})
 }
 

@@ -10,54 +10,55 @@ const app = express();
 const port = process.env.PORT || 5000;
 const path = require('path')
 
+const passport = require('passport');
+const bodyParser = require("body-parser");
+const cors = require('cors')
+
 // mongoose and mongo connection
 const { mongoose } = require("./db/mongoose");
 mongoose.set('useFindAndModify', false);
 
+// User Schema
+const { User } = require("./models/user");
 
-// to validate object IDs
-
-/* Only for reference */
-// const { ObjectID } = require("mongodb");
-// const { User } = require("./models/user");
-// const { Admin } = require("./models/admin")
 
 
 
 
 // enable CORS if in development, for React local development server to connect to the web server.
-const cors = require('cors')
-if (env !== 'production') { app.use(cors()) }
+// if (env !== 'production') { app.use(cors()) }
 
 
 
 
 // body-parser: middleware for parsing HTTP JSON body into a usable object
-const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-
-// express-session for managing user sessions
+// Express Session for managing user sessions
 const session = require("express-session");
-const MongoStore = require('connect-mongo')(session) // to store session information on the database in production
-const { mongo } = require("mongoose");
+
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}));
 
 
 
 
 
-function isMongoError(error) { // checks for first error returned by promise rejection if Mongo database suddently disconnects
-    return typeof error === 'object' && error !== null && error.name === "MongoNetworkError"
-}
+// function isMongoError(error) { // checks for first error returned by promise rejection if Mongo database suddently disconnects
+//     return typeof error === 'object' && error !== null && error.name === "MongoNetworkError"
+// }
 
 
-// middleware for mongo connection error for routes that need it
+// // middleware for mongo connection error for routes that need it
 const mongoChecker = (req, res, next) => {
     // check mongoose connection established.
     if (mongoose.connection.readyState != 1) {
-        log('Issue with mongoose connection')
+        // log('Issue with mongoose connection')
         res.status(500).send('Internal server error')
         return;
     } else {
@@ -65,31 +66,81 @@ const mongoChecker = (req, res, next) => {
     }   
 }
 
-// Firebase Setup 
 
-const admin = require("firebase-admin");
-const serviceAccount = require("./serviceAccountKey.json");
+/* Following part handles authentication 
 
+=============== Backend for Authentication Starts =====================
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+*/
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+
+passport.serializeUser(function(user, done) {
+	done(null, user);
 });
 
-var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth').OAuthStrategy;
-
-// Use the GoogleStrategy within Passport.
+passport.deserializeUser(function(user, done) {
+	done(null, user);
+});
 
 passport.use(new GoogleStrategy({
-    consumerKey: 698522005806-v4bt4q4fje7omd7qs6pj9n6v721bh6gt.apps.googleusercontent.com,
-    consumerSecret: PlQYJxHy2oR-wOdt8ENI1vbJ,
+    clientID: "698522005806-v4bt4q4fje7omd7qs6pj9n6v721bh6gt.apps.googleusercontent.com",
+    clientSecret: "PlQYJxHy2oR-wOdt8ENI1vbJ",
     callbackURL: "http://localhost:5000/google/callback"
   },
   function(token, tokenSecret, profile, done) {
-      User.findOrCreate({ googleId: profile.id }, function (err, user) {
-        return done(err, user);
-      });
+      User.findOrCreate(profile.id, profile.emails[0].value,  profile.displayName).then((user) => {
+        console.log(user);
+      return done(null, user);
+    })
   }
 ));
 
 
+// Auth Routes
+
+// Login to google route
+app.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// Callback after Logging in
+app.get('/google/callback', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }),
+  (req, res) => {
+    // Successful authentication, redirect home.
+    // console.log("Reached here")
+    // res.send('It works!');
+  }
+);
+
+app.get('/login', (req, res)=> {
+  res.redirect('/google');
+})
+
+// Logging out of the session
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.send("User successfully logged out!")
+  // res.redirect('/');
+})
+
+// Middleware to protect and authenticate routes
+const verifyAuthenication = (req, res, next) => {
+  if(req.isAuthenticated()){
+    return next();
+  }
+  res.redirect('/google')
+}
+
+/*
+=============== Backend for Authentication Ends =====================
+*/
+
+// For testing, replace with actual homepage later.
+app.get('/', verifyAuthenication, (req, res) => {
+  res.send("Currently Logged In User: " + req.user.displayName)
+})
+
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))

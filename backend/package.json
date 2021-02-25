@@ -7,7 +7,7 @@
     "doc": "doc"
   },
   "scripts": {
-    "start": "node --experimental-modules index.js"
+    "start": "node --experimental-modules server.js"
   },
   "repository": {
     "type": "module",
@@ -28,6 +28,8 @@
     "firebase-admin": "^9.5.0",
     "mongoose": "^5.11.17",
     "passport": "^0.4.1",
-    "passport-google-oauth": "^2.0.0"
+    "passport-google-oauth": "^2.0.0",
+    "passport-google-oauth20": "^2.0.0",
+    "validator": "^13.5.2"
   }
 }
