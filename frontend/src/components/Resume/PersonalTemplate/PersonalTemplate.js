@@ -1,12 +1,11 @@
 import React from "react";
-import styles from "./JobExpStyles.module.css";
+import styles from "./PersonalTemplate.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faPhone } from '@fortawesome/free-solid-svg-icons';
-import { faGithub, faLinkedinIn } from '@fortawesome/free-brands-svg-icons'
+import { faGithub, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import NumberFormat from 'react-number-format';
 
 function PersonalTemplate(props) {
-    
     return (
         <div class={styles["personal-template"]}>
             <p class={styles.name}>{props.name}</p>

@@ -8,3 +8,11 @@
     flex-direction: row;
     justify-content: left;
 }
+
+.w65 {
+    width: 65%;
+}
+
+.w35 {
+    width: 35%;
+}

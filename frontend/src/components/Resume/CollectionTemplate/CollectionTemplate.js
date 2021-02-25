@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "./Collection.module.css";
+import styles from "./CollectionTemplate.module.css";
 
-function Collection(props) {
+function CollectionTemplate(props) {
     const items = props.items.map((item, index) => {
         return (
             <div className={styles.item} key={index}>
@@ -10,10 +10,10 @@ function Collection(props) {
         )
     })
     return (
-        <div className={styles.container}>
+        <div class="mt-2">
             {items}
         </div>
     )
 }
 
-export default Collection
+export default CollectionTemplate;

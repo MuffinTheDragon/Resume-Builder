@@ -1,6 +1,6 @@
 body {
     font-family:'Roboto', Tahoma, Verdana, sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     color: #394E58;
 }
 
@@ -19,7 +19,8 @@ body {
 }
 
 #resumeRender {
-    width: 50%;
+    width: 8.5in;
+    height: 11in;
     margin: 50px;
     -webkit-box-shadow: 5px 5px 15px 5px #535353; 
     box-shadow: 5px 5px 15px 5px #535353;

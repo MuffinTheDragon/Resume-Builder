@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Personal.module.css";
-import shared from "../Shared.module.css";
+import shared from "../../Shared.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 
