@@ -7,19 +7,16 @@ const mongoose = require('mongoose')
 const ProjectSchema = new mongoose.Schema({
     personal: {
         name: {
-            default: 'John Smith',
             type: String,
             required: true,
             trim: true
         },
         email: {
-            default: 'john.smith@mail.com',
             type: String,
             required: true,
             trim: true
         },
         phone: {
-            default: '(XXX)-XXX-XXXX',
             type: String,
             required: true,
             trim: true
@@ -29,23 +26,19 @@ const ProjectSchema = new mongoose.Schema({
             required: false,
             trim: true
         },
-        required: true
     },
     location: {
         city: {
-            default: 'Mississauga',
             type: String,
             required: true,
             trim: true
         },
         countryCode: {
-            default: 'A1B2C3',
             type: String,
             required: true,
             trim: true
         },
         region: {
-            default: 'Ontario',
             type: String,
             required: true,
             trim: true
@@ -71,7 +64,6 @@ const ProjectSchema = new mongoose.Schema({
     },
     education: {
         city: {
-            default: 'Mississauga',
             type: String,
             required: true,
             trim: true
@@ -82,7 +74,7 @@ const ProjectSchema = new mongoose.Schema({
             trim: true
         },
         gpa: {
-            type: Float32Array,
+            type: mongoose.Decimal128,
             required: false
         },
         graduation_date: {
@@ -90,7 +82,6 @@ const ProjectSchema = new mongoose.Schema({
             required: true
         },
         school: {
-            default: 'University of Toronto Mississauga',
             type: String,
             required: true,
             trim: true
@@ -105,26 +96,26 @@ const ProjectSchema = new mongoose.Schema({
         required: false
     },
     projects: {
-        type: [{project_name: {
-                    type: String,
-                    required: true,
-                    trim: true
-                },
-                description: {
-                    type: String,
-                    required: false,
-                    trim: false
-                },
-                start_date: {
-                    type: Date,
-                    required: true
-                },
-                end_date: {
-                    type: Date,
-                    required: true
-                }
-            }],
-        required: true
+        type: [{
+            project_name: {
+                type: String,
+                required: true,
+                trim: true
+            },
+            description: {
+                type: String,
+                required: false,
+                trim: false
+            },
+            start_date: {
+                type: Date,
+                required: true
+            },
+            end_date: {
+                type: Date,
+                required: true
+            }
+        }],
     },
     skills: {
         type: [String],
