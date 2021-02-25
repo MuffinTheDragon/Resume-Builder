@@ -21,7 +21,7 @@ mongoose.set('useFindAndModify', false);
 const { ObjectID } = require('mongodb')
 // const { User } = require("./models/user");
 // const { Admin } = require("./models/admin")
-const { Template } = require("./models/resumeTemplate")
+const { Template, Experience, Project } = require("./models/resumeTemplate")
 
 
 // enable CORS if in development, for React local development server to connect to the web server.
@@ -105,7 +105,7 @@ app.get('/:template_id', async (req, res) => {
 
 
 // POST 
-app.post('/create', async (req, res) => {
+app.post('/Template/create', async (req, res) => {
     // Add code here
     // check mongoose connection established.
 
@@ -175,39 +175,77 @@ app.listen(port, () => {
 // creates the template model and populates it with the request body data
 async function makeTemplate(req) {
 
-    let template;
+    const final = createSubSchema(req).then(result => {
 
-    template = new Template({
-        userid: req.body.userid,
-        personal: {
-            name: req.body.name,
-            email: req.body.email,
-            phone: req.body.phone,
-            personal_website: req.body.personal_website
-        },
-        location: {
-            city: req.body.lcity,
-            countryCode: req.body.countryCode,
-            region: req.body.region
-        },
-        profile: {
-            platform: req.body.platform,
-            username: req.body.username,
-            url: req.body.url
-        },
-        education: {
-            city: req.body.ecity,
-            degree: req.body.degree,
-            gpa: req.body.gpa,
-            graduation_date: req.body.graduation_date,
-            school: req.body.school,
-            start_date: req.body.start_date
-        },
-        courses: req.body.courses,
-        // experiences: req.body.experiences, // [{date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}]
-        skills: req.body.skills,
-        hobbies: req.body.hobbies,
+        const template = new Template({
+            userid: req.body.userid,
+            personal: {
+                name: req.body.name,
+                email: req.body.email,
+                phone: req.body.phone,
+                personal_website: req.body.personal_website
+            },
+            location: {
+                city: req.body.lcity,
+                countryCode: req.body.countryCode,
+                region: req.body.region
+            },
+            profile: {
+                platform: req.body.platform,
+                username: req.body.username,
+                url: req.body.url
+            },
+            education: {
+                city: req.body.ecity,
+                degree: req.body.degree,
+                gpa: req.body.gpa,
+                graduation_date: req.body.graduation_date,
+                school: req.body.school,
+                start_date: req.body.start_date
+            },
+            courses: req.body.courses,
+            experiences: result[0],
+            projects: result[1],
+            skills: req.body.skills,
+            hobbies: req.body.hobbies,
+        })
+        return template
+    }).catch((error) => {
+        console.error(error);
     })
-    return template;
+
+    return final
+}
+
+
+// creates the experience and project model and populates it with the request body data
+async function createSubSchema(req) {
+
+    let experience_array = []
+    let project_array = []
+    const experience_num = req.body.experiences.length
+    const project_num = req.body.projects.length
+
+    for(let i=0; i<experience_num; i++) {
+        let experience = new Experience({
+            date: req.body.experiences[i].date,
+            description: req.body.experiences[i].description,
+            company_name: req.body.experiences[i].company_name,
+            position: req.body.experiences[i].position
+        })
+        experience_array.push(experience)
+    }
+
+    for(let j=0; j<project_num; j++) {
+        let project = new Project({
+            project_name: req.body.projects[j].project_name,
+            description: req.body.projects[j].description,
+            start_date: req.body.projects[j].start_date,
+            end_date: req.body.projects[j].end_date
+        })
+        project_array.push(project)
+    }
+
+    return [experience_array, project_array]
 }
 

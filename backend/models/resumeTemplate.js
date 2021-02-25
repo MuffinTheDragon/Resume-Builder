@@ -3,6 +3,51 @@
 
 const mongoose = require('mongoose')
 
+// Creating the experience template through mongoose schema
+const ExperienceSchema = new mongoose.Schema({
+    date: {
+        type: Date,
+        required: false
+    },
+    description: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    company_name: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    position: {
+        type: String,
+        required: false,
+        trim: true
+    }
+})
+
+// Creating the project template through mongoose schema
+const ProjectSchema = new mongoose.Schema({
+    project_name: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    description: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    start_date: {
+        type: Date,
+        required: false
+    },
+    end_date: {
+        type: Date,
+        required: false
+    }
+})
+
 // Creating the resume template through mongoose schema
 const TemplateSchema = new mongoose.Schema({
     userid: {
@@ -100,51 +145,14 @@ const TemplateSchema = new mongoose.Schema({
         type: [String],
         required: false
     },
-    // experiences: {
-    //     type: [{
-    //         date: {
-    //             type: Date,
-    //             required: false
-    //         },
-    //         description: {
-    //             type: String,
-    //             required: false,
-    //             trim: false
-    //         },
-    //         company_name: {
-    //             type: String,
-    //             required: false,
-    //             trim: true
-    //         },
-    //         position: {
-    //             type: String,
-    //             required: false,
-    //             trim: true
-    //         }
-    //     }],
-    // },
-    // projects: {
-    //     type: [{
-    //         project_name: {
-    //             type: String,
-    //             required: false,
-    //             trim: true
-    //         },
-    //         description: {
-    //             type: String,
-    //             required: false,
-    //             trim: false
-    //         },
-    //         start_date: {
-    //             type: Date,
-    //             required: false
-    //         },
-    //         end_date: {
-    //             type: Date,
-    //             required: false
-    //         }
-    //     }],
-    // },
+    experiences: {
+        type: [ExperienceSchema],
+        required: true
+    },
+    projects: {
+        type: [ProjectSchema],
+        required: true
+    },
     skills: {
         type: [String],
         required: false
@@ -155,6 +163,9 @@ const TemplateSchema = new mongoose.Schema({
     }
 })
 
-// make a model using the Template schema
-const Experience = mongoose.model('Template', TemplateSchema)
-module.exports = { Template }
+// make models using schemas
+const Template = mongoose.model('Template', TemplateSchema)
+const Experience = mongoose.model('Experience', ExperienceSchema)
+const Project = mongoose.model('Project', ProjectSchema)
+
+module.exports = { Template, Experience, Project }
