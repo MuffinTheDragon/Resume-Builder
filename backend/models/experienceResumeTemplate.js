@@ -5,6 +5,11 @@ const mongoose = require('mongoose')
 
 // Creating the experience resume template through mongoose schema
 const ExperienceSchema = new mongoose.Schema({
+    userid: {
+        type: String,
+        required: true,
+        trim: true
+    },
     personal: {
         name: {
             type: String,
@@ -74,7 +79,7 @@ const ExperienceSchema = new mongoose.Schema({
             trim: true
         },
         gpa: {
-            type: mongoose.Decimal128,
+            type: Number,
             required: false
         },
         graduation_date: {
@@ -95,29 +100,29 @@ const ExperienceSchema = new mongoose.Schema({
         type: [String],
         required: false
     },
-    experiences: {
-        type: [{
-            date: {
-                type: Date,
-                required: true
-            },
-            description: {
-                type: String,
-                required: false,
-                trim: false
-            },
-            company_name: {
-                type: String,
-                required: true,
-                trim: true
-            },
-            position: {
-                type: String,
-                required: true,
-                trim: true
-            }
-        }],
-    },
+    // experiences: {
+    //     type: [{
+    //         date: {
+    //             type: Date,
+    //             required: true
+    //         },
+    //         description: {
+    //             type: String,
+    //             required: false,
+    //             trim: false
+    //         },
+    //         company_name: {
+    //             type: String,
+    //             required: true,
+    //             trim: true
+    //         },
+    //         position: {
+    //             type: String,
+    //             required: true,
+    //             trim: true
+    //         }
+    //     }],
+    // },
     skills: {
         type: [String],
         required: false

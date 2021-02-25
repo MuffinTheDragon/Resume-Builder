@@ -5,6 +5,11 @@ const mongoose = require('mongoose')
 
 // Creating the project resume template through mongoose schema
 const ProjectSchema = new mongoose.Schema({
+    userid: {
+        type: String,
+        required: true,
+        trim: true
+    },
     personal: {
         name: {
             type: String,
@@ -74,7 +79,7 @@ const ProjectSchema = new mongoose.Schema({
             trim: true
         },
         gpa: {
-            type: mongoose.Decimal128,
+            type: Number,
             required: false
         },
         graduation_date: {
@@ -95,28 +100,28 @@ const ProjectSchema = new mongoose.Schema({
         type: [String],
         required: false
     },
-    projects: {
-        type: [{
-            project_name: {
-                type: String,
-                required: true,
-                trim: true
-            },
-            description: {
-                type: String,
-                required: false,
-                trim: false
-            },
-            start_date: {
-                type: Date,
-                required: true
-            },
-            end_date: {
-                type: Date,
-                required: true
-            }
-        }],
-    },
+    // projects: {
+    //     type: [{
+    //         project_name: {
+    //             type: String,
+    //             required: true,
+    //             trim: true
+    //         },
+    //         description: {
+    //             type: String,
+    //             required: false,
+    //             trim: false
+    //         },
+    //         start_date: {
+    //             type: Date,
+    //             required: true
+    //         },
+    //         end_date: {
+    //             type: Date,
+    //             required: true
+    //         }
+    //     }],
+    // },
     skills: {
         type: [String],
         required: false
