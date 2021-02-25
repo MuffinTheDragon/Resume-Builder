@@ -70,39 +70,6 @@ const mongoChecker = (req, res, next) => {
 // const serviceAccount = require("./serviceAccountKey.json");
 // const { EDESTADDRREQ } = require("constants");
 
-// GET the templates 
-app.get('/:template_id', async (req, res) => {
-
-    const _id = req.params.template_id;
-
-    if (!ObjectID(_id)) {
-        res.status(404).send()
-        return;
-    }
-
-    // check mongoose connection established.
-    if (mongoose.connection.readyState != 1) {
-        log('Issue with mongoose connection')
-        res.status(500).send('Internal server error')
-        return;
-    }
-
-    try {
-        const template = await Template.findById(_id)
-        if (!template) {
-            res.status(404).send()
-        }
-        res.send(template)
-    } catch (error) {
-        if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
-            res.status(500).send('Internal server error')
-        } else {
-            res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
-        }
-    }
-
-})
-
 
 // POST 
 app.post('/Template/create', async (req, res) => {
@@ -130,41 +97,6 @@ app.post('/Template/create', async (req, res) => {
     }
 })
 
-
-// UPDATE 
-
-app.patch("/Template/find/:template_id", async (req, res) => {
-
-    const _template_id = req.params.template_id
-
-    if (!ObjectID(_template_id)) {
-        res.status(404).send()
-        return;
-    }
-
-    // check mongoose connection established.
-    if (mongoose.connection.readyState != 1) {
-        log('Issue with mongoose connection')
-        res.status(500).send('Internal server error')
-        return;
-    }
-
-    try {
-        Template.updateOne({ _id: _template_id }, req.body).then(doc => {
-            if (!doc) {
-                return res.status(404).send()
-            }
-            res.status(200).send("Updated")
-        })
-
-    } catch (error) {
-        if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
-            res.status(500).send('Internal server error')
-        } else {
-            res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
-        }
-    }
-})
 
 // Listening for api calls
 app.listen(port, () => {
@@ -221,10 +153,16 @@ async function makeTemplate(req) {
 // creates the experience and project model and populates it with the request body data
 async function createSubSchema(req) {
 
-    let experience_array = []
-    let project_array = []
-    const experience_num = req.body.experiences.length
-    const project_num = req.body.projects.length
+    let experience_num = 0
+    let project_num = 0
+
+    if (req.body.experiences) {
+        experience_num = req.body.experiences.length
+    }
+
+    if (req.body.projects) {
+        project_num = req.body.projects.length
+    }
 
     for(let i=0; i<experience_num; i++) {
         let experience = new Experience({
