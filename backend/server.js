@@ -9,6 +9,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 const path = require('path')
+const { ObjectID } = require('mongodb')
 
 // mongoose and mongo connection
 const { mongoose } = require("./db/mongoose");
@@ -72,8 +73,15 @@ const mongoChecker = (req, res, next) => {
 // const { EDESTADDRREQ } = require("constants");
 
 // GET the templates 
-app.get('/restaurants', async (req, res) => {
+app.get('/:template_id', async (req, res) => {
     // Add code here
+
+    const _id = req.params.template_id;
+
+    if (!ObjectID(_id)) {
+        res.status(404).send()
+        return;
+    }
 
     // check mongoose connection established.
     if (mongoose.connection.readyState != 1) {
@@ -83,12 +91,23 @@ app.get('/restaurants', async (req, res) => {
     }
 
     try {
-        const restaurants = await Restaurant.find()
-        if (!restaurants) {
-            res.status(404).send()
+        let resumeTemplate = req.body.resumeTemplate
+        if (resumeTemplate == "experience") {
+            const template = await Experience.findById(_id)
+            if (!template) {
+                res.status(404).send()
+            }
+            res.send(template)
+        }
+        else if (resumeTemplate == "project") {
+            const template = await Project.findById(_id)
+            if (!template) {
+                res.status(404).send()
+            }
+            res.send(template)
         }
         else {
-            res.send(restaurants)
+            res.status(404).send('Cannot find the template your looking for')
         }
     } catch (error) {
         if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
@@ -131,9 +150,52 @@ app.post('/create', async (req, res) => {
 
 // UPDATE 
 
+app.patch("/Template/find/:userid/:template_id", async (req, res) => {
+    const _id = req.params.userid;
+    const _resv_id = req.params.template_id
 
+    if (!ObjectID(_id) || !ObjectID(_resv_id)) {
+        res.status(404).send()
+        return;
+    }
 
+    // check mongoose connection established.
+    if (mongoose.connection.readyState != 1) {
+        log('Issue with mongoose connection')
+        res.status(500).send('Internal server error')
+        return;
+    }
 
+    try {
+        const rest = await Restaurant.findById(_id)
+        if (!rest) {
+            res.status(404).send()
+        }
+        else {
+            const reserv = await rest.reservations.id(_resv_id)
+            if (!reserv) {
+                res.status(404).send()
+            }
+            else {
+                reserv.time = req.body.time
+                reserv.people = req.body.people
+                const result = await rest.save()
+                res.send({ reservation: reserv, restaurant: result })
+            }
+        }
+
+    } catch (error) {
+        if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
+            res.status(500).send('Internal server error')
+        } else {
+            res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
+        }
+    }
+})
+
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount)
+// });
 
 
 // Listening for api calls
@@ -146,7 +208,7 @@ app.listen(port, () => {
 async function makeTemplate(req, resumeTemplate) {
 
     let template;
-    if(resumeTemplate=="experience") {
+    if (resumeTemplate == "experience") {
         template = new Experience({
             userid: req.body.userid,
             personal: {
@@ -178,7 +240,7 @@ async function makeTemplate(req, resumeTemplate) {
             skills: req.body.skills,
             hobbies: req.body.hobbies,
         })
-    } else if(resumeTemplate=="project") {
+    } else if (resumeTemplate == "project") {
         template = new Project({
             userid: req.body.userid,
             personal: {
