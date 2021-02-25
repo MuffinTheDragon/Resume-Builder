@@ -9,7 +9,6 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 const path = require('path')
-const { ObjectID } = require('mongodb')
 
 // mongoose and mongo connection
 const { mongoose } = require("./db/mongoose");
@@ -19,11 +18,10 @@ mongoose.set('useFindAndModify', false);
 // to validate object IDs
 
 /* Only for reference */
-// const { ObjectID } = require("mongodb");
+const { ObjectID } = require('mongodb')
 // const { User } = require("./models/user");
 // const { Admin } = require("./models/admin")
-const { Experience } = require("./models/experienceResumeTemplate")
-const { Project } = require("./models/projectResumeTemplate")
+const { Template } = require("./models/resumeTemplate")
 
 
 // enable CORS if in development, for React local development server to connect to the web server.
@@ -74,7 +72,6 @@ const mongoChecker = (req, res, next) => {
 
 // GET the templates 
 app.get('/:template_id', async (req, res) => {
-    // Add code here
 
     const _id = req.params.template_id;
 
@@ -91,24 +88,11 @@ app.get('/:template_id', async (req, res) => {
     }
 
     try {
-        let resumeTemplate = req.body.resumeTemplate
-        if (resumeTemplate == "experience") {
-            const template = await Experience.findById(_id)
-            if (!template) {
-                res.status(404).send()
-            }
-            res.send(template)
+        const template = await Template.findById(_id)
+        if (!template) {
+            res.status(404).send()
         }
-        else if (resumeTemplate == "project") {
-            const template = await Project.findById(_id)
-            if (!template) {
-                res.status(404).send()
-            }
-            res.send(template)
-        }
-        else {
-            res.status(404).send('Cannot find the template your looking for')
-        }
+        res.send(template)
     } catch (error) {
         if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
             res.status(500).send('Internal server error')
@@ -131,8 +115,7 @@ app.post('/create', async (req, res) => {
         return;
     }
 
-    let resumeTemplate = req.body.resumeTemplate
-    let template = await makeTemplate(req, resumeTemplate)
+    let template = await makeTemplate(req)
 
     try {
         const final = await template.save()
@@ -150,11 +133,11 @@ app.post('/create', async (req, res) => {
 
 // UPDATE 
 
-app.patch("/Template/find/:userid/:template_id", async (req, res) => {
-    const _id = req.params.userid;
-    const _resv_id = req.params.template_id
+app.patch("/Template/find/:template_id", async (req, res) => {
 
-    if (!ObjectID(_id) || !ObjectID(_resv_id)) {
+    const _template_id = req.params.template_id
+
+    if (!ObjectID(_template_id)) {
         res.status(404).send()
         return;
     }
@@ -167,22 +150,12 @@ app.patch("/Template/find/:userid/:template_id", async (req, res) => {
     }
 
     try {
-        const rest = await Restaurant.findById(_id)
-        if (!rest) {
-            res.status(404).send()
-        }
-        else {
-            const reserv = await rest.reservations.id(_resv_id)
-            if (!reserv) {
-                res.status(404).send()
+        Template.updateOne({ _id: _template_id }, req.body).then(doc => {
+            if (!doc) {
+                return res.status(404).send()
             }
-            else {
-                reserv.time = req.body.time
-                reserv.people = req.body.people
-                const result = await rest.save()
-                res.send({ reservation: reserv, restaurant: result })
-            }
-        }
+            res.status(200).send("Updated")
+        })
 
     } catch (error) {
         if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
@@ -193,11 +166,6 @@ app.patch("/Template/find/:userid/:template_id", async (req, res) => {
     }
 })
 
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount)
-// });
-
-
 // Listening for api calls
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
@@ -205,77 +173,41 @@ app.listen(port, () => {
 
 
 // creates the template model and populates it with the request body data
-async function makeTemplate(req, resumeTemplate) {
+async function makeTemplate(req) {
 
     let template;
-    if (resumeTemplate == "experience") {
-        template = new Experience({
-            userid: req.body.userid,
-            personal: {
-                name: req.body.name,
-                email: req.body.email,
-                phone: req.body.phone,
-                personal_website: req.body.personal_website
-            },
-            location: {
-                city: req.body.lcity,
-                countryCode: req.body.countryCode,
-                region: req.body.region
-            },
-            profile: {
-                platform: req.body.platform,
-                username: req.body.username,
-                url: req.body.url
-            },
-            education: {
-                city: req.body.ecity,
-                degree: req.body.degree,
-                gpa: req.body.gpa,
-                graduation_date: req.body.graduation_date,
-                school: req.body.school,
-                start_date: req.body.start_date
-            },
-            courses: req.body.courses,
-            // experiences: req.body.experiences, // [{date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}]
-            skills: req.body.skills,
-            hobbies: req.body.hobbies,
-        })
-    } else if (resumeTemplate == "project") {
-        template = new Project({
-            userid: req.body.userid,
-            personal: {
-                name: req.body.name,
-                email: req.body.email,
-                phone: req.body.phone,
-                personal_website: req.body.personal_website
-            },
-            location: {
-                city: req.body.lcity,
-                countryCode: req.body.countryCode,
-                region: req.body.region
-            },
-            profile: {
-                platform: req.body.platform,
-                username: req.body.username,
-                url: req.body.url
-            },
-            education: {
-                city: req.body.ecity,
-                degree: req.body.degree,
-                gpa: req.body.gpa,
-                graduation_date: req.body.graduation_date,
-                school: req.body.school,
-                start_date: req.body.start_date
-            },
-            courses: req.body.courses,
-            // experiences: req.body.experiences, // [{date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}]
-            skills: req.body.skills,
-            hobbies: req.body.hobbies,
-        })
-    } else {
-        return template;
-    }
 
+    template = new Template({
+        userid: req.body.userid,
+        personal: {
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            personal_website: req.body.personal_website
+        },
+        location: {
+            city: req.body.lcity,
+            countryCode: req.body.countryCode,
+            region: req.body.region
+        },
+        profile: {
+            platform: req.body.platform,
+            username: req.body.username,
+            url: req.body.url
+        },
+        education: {
+            city: req.body.ecity,
+            degree: req.body.degree,
+            gpa: req.body.gpa,
+            graduation_date: req.body.graduation_date,
+            school: req.body.school,
+            start_date: req.body.start_date
+        },
+        courses: req.body.courses,
+        // experiences: req.body.experiences, // [{date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}]
+        skills: req.body.skills,
+        hobbies: req.body.hobbies,
+    })
     return template;
 }
 
