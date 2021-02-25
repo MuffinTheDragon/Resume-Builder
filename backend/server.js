@@ -21,8 +21,7 @@ mongoose.set('useFindAndModify', false);
 // const { ObjectID } = require("mongodb");
 // const { User } = require("./models/user");
 // const { Admin } = require("./models/admin")
-const { Experience } = require("./models/experienceResumeTemplate")
-const { Project } = require("./models/projectResumeTemplate")
+const { Template } = require("./models/resumeTemplate")
 
 
 // enable CORS if in development, for React local development server to connect to the web server.
@@ -112,8 +111,7 @@ app.post('/create', async (req, res) => {
         return;
     }
 
-    let resumeTemplate = req.body.resumeTemplate
-    let template = await makeTemplate(req, resumeTemplate)
+    let template = await makeTemplate(req)
 
     try {
         const final = await template.save()
@@ -143,76 +141,41 @@ app.listen(port, () => {
 
 
 // creates the template model and populates it with the request body data
-async function makeTemplate(req, resumeTemplate) {
+async function makeTemplate(req) {
 
     let template;
-    if(resumeTemplate=="experience") {
-        template = new Experience({
-            userid: req.body.userid,
-            personal: {
-                name: req.body.name,
-                email: req.body.email,
-                phone: req.body.phone,
-                personal_website: req.body.personal_website
-            },
-            location: {
-                city: req.body.lcity,
-                countryCode: req.body.countryCode,
-                region: req.body.region
-            },
-            profile: {
-                platform: req.body.platform,
-                username: req.body.username,
-                url: req.body.url
-            },
-            education: {
-                city: req.body.ecity,
-                degree: req.body.degree,
-                gpa: req.body.gpa,
-                graduation_date: req.body.graduation_date,
-                school: req.body.school,
-                start_date: req.body.start_date
-            },
-            courses: req.body.courses,
-            // experiences: req.body.experiences, // [{date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}]
-            skills: req.body.skills,
-            hobbies: req.body.hobbies,
-        })
-    } else if(resumeTemplate=="project") {
-        template = new Project({
-            userid: req.body.userid,
-            personal: {
-                name: req.body.name,
-                email: req.body.email,
-                phone: req.body.phone,
-                personal_website: req.body.personal_website
-            },
-            location: {
-                city: req.body.lcity,
-                countryCode: req.body.countryCode,
-                region: req.body.region
-            },
-            profile: {
-                platform: req.body.platform,
-                username: req.body.username,
-                url: req.body.url
-            },
-            education: {
-                city: req.body.ecity,
-                degree: req.body.degree,
-                gpa: req.body.gpa,
-                graduation_date: req.body.graduation_date,
-                school: req.body.school,
-                start_date: req.body.start_date
-            },
-            courses: req.body.courses,
-            // experiences: req.body.experiences, // [{date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}]
-            skills: req.body.skills,
-            hobbies: req.body.hobbies,
-        })
-    } else {
-        return template;
-    }
+
+    template = new Experience({
+        userid: req.body.userid,
+        personal: {
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            personal_website: req.body.personal_website
+        },
+        location: {
+            city: req.body.lcity,
+            countryCode: req.body.countryCode,
+            region: req.body.region
+        },
+        profile: {
+            platform: req.body.platform,
+            username: req.body.username,
+            url: req.body.url
+        },
+        education: {
+            city: req.body.ecity,
+            degree: req.body.degree,
+            gpa: req.body.gpa,
+            graduation_date: req.body.graduation_date,
+            school: req.body.school,
+            start_date: req.body.start_date
+        },
+        courses: req.body.courses,
+        // experiences: req.body.experiences, // [{date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}, {date: "", description: "", company_name: ""}]
+        skills: req.body.skills,
+        hobbies: req.body.hobbies,
+    })
 
     return template;
 }

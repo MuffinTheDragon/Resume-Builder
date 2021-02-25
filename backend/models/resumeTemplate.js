@@ -1,10 +1,10 @@
-/* Project Resume Template model */
+/* Resume Template model */
 'use strict';
 
 const mongoose = require('mongoose')
 
-// Creating the project resume template through mongoose schema
-const ProjectSchema = new mongoose.Schema({
+// Creating the resume template through mongoose schema
+const TemplateSchema = new mongoose.Schema({
     userid: {
         type: String,
         required: true,
@@ -100,11 +100,34 @@ const ProjectSchema = new mongoose.Schema({
         type: [String],
         required: false
     },
+    // experiences: {
+    //     type: [{
+    //         date: {
+    //             type: Date,
+    //             required: false
+    //         },
+    //         description: {
+    //             type: String,
+    //             required: false,
+    //             trim: false
+    //         },
+    //         company_name: {
+    //             type: String,
+    //             required: false,
+    //             trim: true
+    //         },
+    //         position: {
+    //             type: String,
+    //             required: false,
+    //             trim: true
+    //         }
+    //     }],
+    // },
     // projects: {
     //     type: [{
     //         project_name: {
     //             type: String,
-    //             required: true,
+    //             required: false,
     //             trim: true
     //         },
     //         description: {
@@ -114,11 +137,11 @@ const ProjectSchema = new mongoose.Schema({
     //         },
     //         start_date: {
     //             type: Date,
-    //             required: true
+    //             required: false
     //         },
     //         end_date: {
     //             type: Date,
-    //             required: true
+    //             required: false
     //         }
     //     }],
     // },
@@ -132,6 +155,6 @@ const ProjectSchema = new mongoose.Schema({
     }
 })
 
-// make a model using the Project schema
-const Project = mongoose.model('Project', ProjectSchema)
-module.exports = { Project }
+// make a model using the Template schema
+const Experience = mongoose.model('Template', TemplateSchema)
+module.exports = { Template }
