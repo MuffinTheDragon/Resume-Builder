@@ -21,8 +21,8 @@ mongoose.set('useFindAndModify', false);
 // const { ObjectID } = require("mongodb");
 // const { User } = require("./models/user");
 // const { Admin } = require("./models/admin")
-
-
+const { ExperienceTemplate } = require("./models/experienceResumeTemplate")
+const { ProjectTemplate } = require("./models/projectResumeTemplate")
 
 
 // enable CORS if in development, for React local development server to connect to the web server.
@@ -41,7 +41,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // express-session for managing user sessions
 const session = require("express-session");
-const MongoStore = require('connect-mongo')(session) // to store session information on the database in production
+// const MongoStore = require('connect-mongo')(session) // to store session information on the database in production
 const { mongo } = require("mongoose");
 
 
@@ -61,8 +61,8 @@ const mongoChecker = (req, res, next) => {
         res.status(500).send('Internal server error')
         return;
     } else {
-        next()  
-    }   
+        next()
+    }
 }
 
 // Firebase Setup 
@@ -70,11 +70,20 @@ const mongoChecker = (req, res, next) => {
 const admin = require("firebase-admin");
 const serviceAccount = require("./serviceAccountKey.json");
 
+// GET the templates 
+
+
+// POST 
+
+
+// UPDATE 
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount)
 });
 
 
-
+app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`);
+});
 
