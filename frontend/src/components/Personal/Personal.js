@@ -11,7 +11,7 @@ function Personal() {
                 <div class={styles.personal}>
                     <h3>Personal <FontAwesomeIcon icon={faUser} /></h3>
                     <hr/>
-                    <div class={styles.formRow}>
+                    <div class={shared.formRow}>
                         <div>
                             <label for="fname">First name</label><br></br>
                             <input type="text" id="fname" name="fname"></input>
@@ -21,7 +21,7 @@ function Personal() {
                             <input type="text" id="lname" name="lname"></input>
                         </div>
                     </div>
-                    <div class={styles.formRow}>
+                    <div class={shared.formRow}>
                         <div>
                             <label for="email">Email</label><br></br>
                             <input type="email" id="email" name="email"></input>
@@ -31,7 +31,7 @@ function Personal() {
                             <input type="text" id="phonenumber" name="phonenumber"></input>
                         </div>
                     </div>
-                    <div class={styles.formRow}>
+                    <div class={shared.formRow}>
                         <div>
                             <label for="personalwebsite">Personal Website</label><br></br>
                             <input type="text" id="personalwebsite" name="personalwebsite"></input>

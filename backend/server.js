@@ -10,6 +10,19 @@ const app = express();
 const port = process.env.PORT || 5000;
 const path = require('path')
 
+// mongoose and mongo connection
+const { mongoose } = require("./db/mongoose");
+mongoose.set('useFindAndModify', false);
+
+
+// to validate object IDs
+
+/* Only for reference */
+// const { ObjectID } = require("mongodb");
+// const { User } = require("./models/user");
+// const { Admin } = require("./models/admin")
+
+
 
 
 // enable CORS if in development, for React local development server to connect to the web server.
@@ -29,6 +42,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // express-session for managing user sessions
 const session = require("express-session");
 const MongoStore = require('connect-mongo')(session) // to store session information on the database in production
+const { mongo } = require("mongoose");
+
+
+
 
 
 function isMongoError(error) { // checks for first error returned by promise rejection if Mongo database suddently disconnects
