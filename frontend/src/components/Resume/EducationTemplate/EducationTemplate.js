@@ -8,7 +8,7 @@ function EducationTemplate(props) {
         <>
             <h2>{props.school}</h2>
             <h3>{props.degree}</h3>
-            <span class={styles.date}><FontAwesomeIcon icon={faCalendarAlt} /> {props.date} | GPA: {props.gpa}</span>
+            <span className={styles.date}><FontAwesomeIcon icon={faCalendarAlt} /> {props.start_date} - {props.end_date} | GPA: {props.gpa}</span>
         </>
     );
 }

@@ -1,4 +1,4 @@
-.personal-template {
+.personalTemplate {
     margin: 3rem 3rem 0 3rem;
 }
 
@@ -9,12 +9,12 @@
     margin: 0.25rem 0;
 }
 
-.info-icon {
+.infoIcon {
     color: #22a6f2;
     margin-right: 0.25rem;
 }
 
-.personal-info h4 {
+.personalInfo h4 {
     display: inline-block;
     font-weight: 700;
     margin: 0 1rem 0.5rem 0;

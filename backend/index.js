@@ -23,7 +23,6 @@ app.get("/Templates", async (req, res) => {
     try {
         let collection = req.body.collection
         let document = req.body.document
-        console.log(req.body.collection);
 
         let templates = []
 

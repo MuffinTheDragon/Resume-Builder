@@ -29,12 +29,11 @@ h3 {
 h4 {
   color: #000;
   font-size: 1.15em;
-  font-weight: 700;
   margin:0;
 }
 
 hr {
-  height: 4px;
+  height: 3px;
   background-color: #22a6f2;
   border: none;
   margin: 0;

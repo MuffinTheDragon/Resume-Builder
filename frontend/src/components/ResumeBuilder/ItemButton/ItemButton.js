@@ -1,18 +1,18 @@
 import React from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import styles from "./Item.module.css";
+import styles from "./ItemButton.module.css";
 
-let Item = (props) => {
+let ItemButton = (props) => {
     return (
-        <div onClick={props.addNewSection} class={styles.item}>
-            <div class={styles.icon}>
+        <div onClick={props.addNewSection} className={styles.item}>
+            <div className={styles.icon}>
                 <FontAwesomeIcon icon={props.icon} size={"2x"}/>
             </div>
-            <div class={styles.title}>
+            <div className={styles.title}>
                 {props.name}
             </div>
         </div>
     )
 }
 
-export default Item;
+export default ItemButton;

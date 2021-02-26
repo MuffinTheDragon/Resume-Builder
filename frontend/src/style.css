@@ -21,7 +21,11 @@ body {
 #resumeRender {
     width: 8.5in;
     height: 11in;
-    margin: 50px;
+    margin-left: 25rem;
     -webkit-box-shadow: 5px 5px 15px 5px #535353; 
     box-shadow: 5px 5px 15px 5px #535353;
+}
+
+input {
+    margin-bottom:650;
 }

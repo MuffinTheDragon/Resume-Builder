@@ -1,7 +1,7 @@
 import React from 'react';
-import Project from "../../../ResumeBuilder/Project/Project";
+import Project from "../Forms/Project/Project";
 
-let Card = (props) => {
+let AdditionalCard = (props) => {
     let card = null;
     switch (props.name) {
         case "Project":
@@ -22,4 +22,4 @@ let Card = (props) => {
     }
     return card;
 }
-export default Card;
+export default AdditionalCard;

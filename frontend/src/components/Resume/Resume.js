@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styles from "../Shared.module.css";
 import "./TemplateStyles.module.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,8 +8,9 @@ import ExperienceTemplate from "../Resume/ExperienceTemplate/ExperienceTemplate"
 import EducationTemplate from "./EducationTemplate/EducationTemplate";
 import AchievementsTemplate from "./AchievementsTemplate/AchievementsTemplate";
 import CollectionTemplate from "./CollectionTemplate/CollectionTemplate";
+import { ResumeContext } from "../../App";
 
-const Resume = ({resume}) => {
+const Resume = () => {
     const resumeComponents = {
         Experience: [],
         Projects: [],
@@ -19,13 +20,16 @@ const Resume = ({resume}) => {
         CourseWork: []
     };
 
+    let {resumeState} = useContext(ResumeContext);
+    let resume = resumeState;
     let component;
-    for (let key in resume) { 
+    for (let key in resume) {
+        // Rendering the header if there is data available to process
         if (key !== "Personal" && resume[key].length !== 0){
             let header = key.replace(/([A-Z])/g, ' $1').replace(/^./, ((str) => {
                 return str.toUpperCase();
             }));
-            resumeComponents[key].push(<HeaderTemplate header={header}/>)
+            resumeComponents[key].push(<HeaderTemplate key={header} header={header}/>)
         }
         for (let i=0; i < resume[key].length; i++){
             let data = resume[key][i];
@@ -33,13 +37,14 @@ const Resume = ({resume}) => {
             switch(key) {
                 case "Projects":
                 case "Experience":
-                    component = <ExperienceTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} location={data.location} desc={data.desc}/>
+                    let location = "";
+                    if (data.location !== undefined) {
+                        location = data.location;
+                    }
+                    component = <ExperienceTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} location={location} desc={data.desc}/>
                     break;
                 case "Achievements":
                     component = <AchievementsTemplate key={i} title={data.title} desc={data.desc} />
-                    break;
-                case "EducationHistory":
-                    component = <EducationTemplate key={i} school={data.EducationHistory} degree={data.degree} date={data.date} gpa={data.gpa}/>   
                     break;
                 case "CourseWork":
                 case "Skills":
@@ -56,19 +61,23 @@ const Resume = ({resume}) => {
         }
     }
     return ( 
-        <div id="resumeRender">
-            <PersonalTemplate name={resume.Personal.name} email={resume.Personal.email} telephone={resume.Personal.telephone} linkedin={resume.Personal.linkedin} github={resume.Personal.github}/>
-            <div class="d-flex pl-5 pr-5 pb-5">
-                <div class={"mr-3 " + styles.w65}>
+        <div id={styles.ResumeRender}>
+            <PersonalTemplate fname={resume.Personal.fname} lname={resume.Personal.lname} email={resume.Personal.email} telephone={resume.Personal.telephone} website={resume.Personal.website} github={resume.Personal.github}/>
+            <div className="d-flex pl-5 pr-5 pb-5">
+                <div className={"mr-3 " + styles.w65}>
                     {resumeComponents.Experience}
                     {resumeComponents.Projects}
                 </div>
-                <div class={styles.w35}>
-                    {resumeComponents.EducationHistory}
-                    {resumeComponents.Achievements}     
-                    {resumeComponents.Skills}
-                    {resumeComponents.CourseWork}
-
+                <div className={styles.w35}>
+                {resume["EducationHistory"].school === "" || Object.keys(resume["EducationHistory"]).length === 0 ? '' :
+                <>
+                <HeaderTemplate header={"Education History"}/>
+                <EducationTemplate school={resume.EducationHistory.school} degree={resume.EducationHistory.degree} start_date={resume.EducationHistory.startDate} end_date={resume.EducationHistory.endDate} gpa={resume.EducationHistory.gpa}/>
+                </>
+                }
+                {resumeComponents.Achievements}     
+                {resumeComponents.Skills}
+                {resumeComponents.CourseWork}
                 </div>
             </div>
         </div>

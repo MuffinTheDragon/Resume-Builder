@@ -6,20 +6,20 @@ import { faCalendarAlt, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons
 function ExperienceTemplate(props) {
 
     const jobDesc = props.desc;
-    const listItems = jobDesc.map((point) =>
-        <li key={point}>
-            {point}
-        </li>
+    const listItems = jobDesc.map((point, index) => {
+        return (
+            <li key={index}>
+                {point}
+            </li>
+         )
+        }
     );
-
     return (
         <div>
             <h2>{props.title}</h2>
-            <h3 class="resumeRender">{props.subtitle}</h3>
-            <span class={styles.date}><FontAwesomeIcon icon={faCalendarAlt} /> {props.startDate} - {props.endDate}</span> <span class={styles.location}><FontAwesomeIcon icon={faMapMarkerAlt} /> {props.location}</span>
-            <ul>
-                {listItems}
-            </ul>
+            <h3 className="resumeRender">{props.subtitle}</h3>
+            <span className={styles.date}>{props.startDate !== "" ? <><FontAwesomeIcon icon={faCalendarAlt} /> {props.startDate} - {props.endDate}</> : ''}</span> {props.location === "" ? '' : <><span className={styles.location}><FontAwesomeIcon icon={faMapMarkerAlt} /> {props.location}</span></>}
+            {(props.desc[0] === "" && props.desc.length === 1) ? "" : <ul>{listItems}</ul>}
         </div>
     );
 }

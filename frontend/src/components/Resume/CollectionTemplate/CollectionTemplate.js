@@ -10,7 +10,7 @@ function CollectionTemplate(props) {
         )
     })
     return (
-        <div class="mt-2">
+        <div className="mt-2">
             {items}
         </div>
     )

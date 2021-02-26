@@ -1,19 +1,26 @@
-import React from "react";
+import React, {useReducer, createContext} from "react";
 import "./style.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import ResumeBuilder from "./components/ResumeBuilder/ResumeBuilder";
 import Resume from "./components/Resume/Resume";
 
+const reducer = (_, newState)  => {
+    return {...newState};
+};
+export const ResumeContext = createContext();
+
 const App = () => {
-    const DummyResume = {
+    let DummyResume = {
         Personal: {
-            name: "Jonathan Wang :D",
-            email: "jonw.wang@mail.utoronto.ca",
-            telephone: "5555555555",
-            linkedin: "in/jonathan-yc-wang",
-            github: "github.com/JonathanYcWang"
+            fname: "John",
+            lname: "Doe",
+            email: "Jon@Doe.com",
+            telephone: "1234567890",
+            website: "JonDoe.ca",
+            github: "github.com/JD"
         },
         Experience: [{
+            id: 0,
             title: "Teaching Assistant",
             subtitle: "University of Toronto",
             startDate: "Jan 2020",
@@ -22,6 +29,16 @@ const App = () => {
             desc: ["Lorem Ipsum", "pancakes and waffles"]
         },
         {
+            id: 1,
+            title: "Teaching Assistant",
+            subtitle: "University of Toronto",
+            startDate: "Jan 2020",
+            endDate: "Dec 2020",
+            location: "Toronto, ON",
+            desc: ["Lorem Ipsum", "pancakes and waffles"]
+        },
+        {
+            id: 2,
             title: "Professional Potato",
             subtitle: "Home",
             startDate: "When I was born",
@@ -30,6 +47,7 @@ const App = () => {
             desc: ["Potato", "Professional", "Yes"]
         },
         {
+            id: 3,
             title: "Professional Waffle",
             subtitle: "wafflehouse",
             startDate: "When I was born",
@@ -38,50 +56,51 @@ const App = () => {
             desc: ["Potato", "Professional", "Yes"]
         }],
         Projects: [{
+            id: 0,
             title: "Projects",
             subtitle: "Very Cool Project",
-            startDate: "Jan 2020",
-            endDate: "Dec 2020",
-            location: "Toronto, ON",
-            desc: ["I did cool stuff", "Code to brrrrr"]
+            startDate: "2020-01",
+            endDate: "2021-02",
+            desc: ["I did cool stuff", "Code go brrrrr"]
         },
         {
+            id: 1,
             title: "Another Cool Project",
             subtitle: "WOOOOOOOOOOOO",
-            startDate: "Jan 2021",
-            endDate: "Dec 2025",
-            location: "LOL",
+            startDate: "2019-03",
+            endDate: "2021-03",
+            desc: ["COOOOOOOOOL", "doggohehe"]
+        },
+        {
+            id: 2,
+            title: "Another Cool Project",
+            subtitle: "WOOOOOOOOOOOO",
+            startDate: "2017-05",
+            endDate: "2018-02",
             desc: ["COOOOOOOOOL", "doggohehe"]
         }],
         Achievements: [{
+            id: 0,
             title: 'Dean\'s List (2018-2020)',
             desc: 'GPA of 3.50 or above'
         },
         {
+            id: 1,
             title: 'Honorable Mention',
             desc: 'Adobe Creative Jams'
         }],
-        EducationHistory: [{
-            school: "University of Toronto",
-            degree: "H.B.Sc Computer Science & Statistics",
-            date: "Sept 2015 - June 2020",
-            gpa: "3.7"
-        },
-        {
-            school: "HS",
-            degree: "Ontario Diploma of something",
-            date: "Sept 2014 - June 2015",
-            gpa: "10 (Max 5 went above and beyond)"
-        }],
-        Skills: ["Java", "Python", "MySQL", "NoSQL", "REST", "Spring", "JavaScript", "Vue", "React", "Node", "Express", "HTML", "CSS", "Bootstrap", "Firebase", "Android", "Git", "Unix", "Agile", "Scrum", "SDLC", "Jira"],
-        CourseWork: ["Algorithms & Data Structures Analysis", "Software Engineering", "Software Design", "Databases", "Human-Computer Interface", "Computational Complexity & Computability", "Systems Programming", "Game Design"]
+        EducationHistory: {},
+        Skills: [],
+        CourseWork: []
     };
-    
+    const [resumeState, setResume] = useReducer(reducer, DummyResume);
+
     return (
-        <div class="d-flex w-100">
-            <div id="editor" class="w-65">
-            </div>
-            <Resume resume={DummyResume}/>
+        <div className="d-flex w-100">
+            <ResumeContext.Provider value={{resumeState, setResume}}>
+                <ResumeBuilder/>
+                <Resume/>
+            </ResumeContext.Provider>
         </div>
     );
 }
