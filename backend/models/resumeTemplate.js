@@ -1,25 +1,72 @@
-/* Project Resume Template model */
+/* Resume Template model */
 'use strict';
 
 const mongoose = require('mongoose')
 
-// Creating the project resume template through mongoose schema
+// Creating the experience template through mongoose schema
+const ExperienceSchema = new mongoose.Schema({
+    date: {
+        type: Date,
+        required: false
+    },
+    description: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    company_name: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    position: {
+        type: String,
+        required: false,
+        trim: true
+    }
+})
+
+// Creating the project template through mongoose schema
 const ProjectSchema = new mongoose.Schema({
+    project_name: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    description: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    start_date: {
+        type: Date,
+        required: false
+    },
+    end_date: {
+        type: Date,
+        required: false
+    }
+})
+
+// Creating the resume template through mongoose schema
+const TemplateSchema = new mongoose.Schema({
+    userid: {
+        type: String,
+        required: true,
+        trim: true
+    },
     personal: {
         name: {
-            default: 'John Smith',
             type: String,
             required: true,
             trim: true
         },
         email: {
-            default: 'john.smith@mail.com',
             type: String,
             required: true,
             trim: true
         },
         phone: {
-            default: '(XXX)-XXX-XXXX',
             type: String,
             required: true,
             trim: true
@@ -29,23 +76,19 @@ const ProjectSchema = new mongoose.Schema({
             required: false,
             trim: true
         },
-        required: true
     },
     location: {
         city: {
-            default: 'Mississauga',
             type: String,
             required: true,
             trim: true
         },
         countryCode: {
-            default: 'A1B2C3',
             type: String,
             required: true,
             trim: true
         },
         region: {
-            default: 'Ontario',
             type: String,
             required: true,
             trim: true
@@ -71,7 +114,6 @@ const ProjectSchema = new mongoose.Schema({
     },
     education: {
         city: {
-            default: 'Mississauga',
             type: String,
             required: true,
             trim: true
@@ -82,7 +124,7 @@ const ProjectSchema = new mongoose.Schema({
             trim: true
         },
         gpa: {
-            type: Float32Array,
+            type: Number,
             required: false
         },
         graduation_date: {
@@ -90,7 +132,6 @@ const ProjectSchema = new mongoose.Schema({
             required: true
         },
         school: {
-            default: 'University of Toronto Mississauga',
             type: String,
             required: true,
             trim: true
@@ -104,26 +145,12 @@ const ProjectSchema = new mongoose.Schema({
         type: [String],
         required: false
     },
+    experiences: {
+        type: [ExperienceSchema],
+        required: true
+    },
     projects: {
-        type: [{project_name: {
-                    type: String,
-                    required: true,
-                    trim: true
-                },
-                description: {
-                    type: String,
-                    required: false,
-                    trim: false
-                },
-                start_date: {
-                    type: Date,
-                    required: true
-                },
-                end_date: {
-                    type: Date,
-                    required: true
-                }
-            }],
+        type: [ProjectSchema],
         required: true
     },
     skills: {
@@ -136,6 +163,9 @@ const ProjectSchema = new mongoose.Schema({
     }
 })
 
-// make a model using the Project schema
+// make models using schemas
+const Template = mongoose.model('Template', TemplateSchema)
+const Experience = mongoose.model('Experience', ExperienceSchema)
 const Project = mongoose.model('Project', ProjectSchema)
-module.exports = { Project }
+
+module.exports = { Template, Experience, Project }

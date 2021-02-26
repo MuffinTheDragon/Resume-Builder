@@ -1,3 +1,10 @@
 .editmenu {
-    width: 35%;
+    width:80%;
+}
+
+.formRow {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: left;
 }

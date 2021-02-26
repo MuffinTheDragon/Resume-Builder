@@ -22,6 +22,7 @@ mongoose.set('useFindAndModify', false);
 const { User } = require("./models/user");
 
 
+const { Template, Experience, Project } = require("./models/resumeTemplate")
 
 
 
@@ -62,9 +63,46 @@ const mongoChecker = (req, res, next) => {
         res.status(500).send('Internal server error')
         return;
     } else {
-        next()  
-    }   
+        next()
+    }
 }
+
+
+
+// // Firebase Setup 
+
+// const admin = require("firebase-admin");
+// const serviceAccount = require("./serviceAccountKey.json");
+// const { EDESTADDRREQ } = require("constants");
+
+
+// POST 
+app.post('/Template/create', async (req, res) => {
+    // Add code here
+    // check mongoose connection established.
+
+    if (mongoose.connection.readyState != 1) {
+        log('Issue with mongoose connection')
+        res.status(500).send('Internal server error')
+        return;
+    }
+
+    let template = await makeTemplate(req)
+
+    try {
+        const final = await template.save()
+        res.status(200).send(final);
+
+    } catch (error) {
+        if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
+            res.status(500).send('Internal server error')
+        } else {
+            res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
+        }
+    }
+})
+
+
 
 
 /* Following part handles authentication 
@@ -142,5 +180,93 @@ const verifyAuthenication = (req, res, next) => {
 app.get('/', verifyAuthenication, (req, res) => {
   res.send("Currently Logged In User: " + req.user.displayName)
 })
+
+/*
+=============== Routes =====================
+*/
+
+// creates the template model and populates it with the request body data
+async function makeTemplate(req) {
+
+    const final = createSubSchema(req).then(result => {
+
+        const template = new Template({
+            userid: req.body.userid,
+            personal: {
+                name: req.body.name,
+                email: req.body.email,
+                phone: req.body.phone,
+                personal_website: req.body.personal_website
+            },
+            location: {
+                city: req.body.lcity,
+                countryCode: req.body.countryCode,
+                region: req.body.region
+            },
+            profile: {
+                platform: req.body.platform,
+                username: req.body.username,
+                url: req.body.url
+            },
+            education: {
+                city: req.body.ecity,
+                degree: req.body.degree,
+                gpa: req.body.gpa,
+                graduation_date: req.body.graduation_date,
+                school: req.body.school,
+                start_date: req.body.start_date
+            },
+            courses: req.body.courses,
+            experiences: result[0],
+            projects: result[1],
+            skills: req.body.skills,
+            hobbies: req.body.hobbies,
+        })
+        return template
+    }).catch((error) => {
+        console.error(error);
+    })
+
+    return final
+}
+
+
+// creates the experience and project model and populates it with the request body data
+async function createSubSchema(req) {
+
+    let experience_num = 0
+    let project_num = 0
+
+    if (req.body.experiences) {
+        experience_num = req.body.experiences.length
+    }
+
+    if (req.body.projects) {
+        project_num = req.body.projects.length
+    }
+
+    for(let i=0; i<experience_num; i++) {
+        let experience = new Experience({
+            date: req.body.experiences[i].date,
+            description: req.body.experiences[i].description,
+            company_name: req.body.experiences[i].company_name,
+            position: req.body.experiences[i].position
+        })
+        experience_array.push(experience)
+    }
+
+    for(let j=0; j<project_num; j++) {
+        let project = new Project({
+            project_name: req.body.projects[j].project_name,
+            description: req.body.projects[j].description,
+            start_date: req.body.projects[j].start_date,
+            end_date: req.body.projects[j].end_date
+        })
+        project_array.push(project)
+    }
+
+    return [experience_array, project_array]
+}
+
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

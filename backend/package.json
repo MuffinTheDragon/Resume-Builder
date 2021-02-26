@@ -7,7 +7,10 @@
     "doc": "doc"
   },
   "scripts": {
+
     "start": "node --experimental-modules server.js"
+
+
   },
   "repository": {
     "type": "module",
@@ -26,10 +29,13 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "firebase-admin": "^9.5.0",
-    "mongoose": "^5.11.17",
     "passport": "^0.4.1",
     "passport-google-oauth": "^2.0.0",
     "passport-google-oauth20": "^2.0.0",
     "validator": "^13.5.2"
+    "connect-mongo": "^4.2.0",
+    "firebase": "^8.2.9",
+    "mongoose": "^5.11.18"
+
   }
 }
