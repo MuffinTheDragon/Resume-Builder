@@ -64,14 +64,8 @@ const mongoChecker = (req, res, next) => {
     }
 }
 
-// // Firebase Setup 
-
-// const admin = require("firebase-admin");
-// const serviceAccount = require("./serviceAccountKey.json");
-// const { EDESTADDRREQ } = require("constants");
-
 // GET the templates 
-app.get('/:template_id', async (req, res) => {
+app.get('/Template/find/:template_id', async (req, res) => {
 
     const _id = req.params.template_id;
 
@@ -133,7 +127,7 @@ app.post('/Template/create', async (req, res) => {
 
 // UPDATE 
 
-app.patch("/Template/find/:template_id", async (req, res) => {
+app.patch("/Template/update/:template_id", async (req, res) => {
 
     const _template_id = req.params.template_id
 
@@ -154,8 +148,20 @@ app.patch("/Template/find/:template_id", async (req, res) => {
             if (!doc) {
                 return res.status(404).send()
             }
-            res.status(200).send("Updated")
         })
+        const query = Template.where({ _id: _template_id });
+        query.findOne(function (err, temps) {
+            if (err) return handleError(err);
+
+            createSubSchema(req).then(result => {
+                Template.updateOne({ _id: _template_id }, { "experiences": [...temps.experiences, ...result[0]], "projects": [...temps.projects, ...result[1]] }).then(doc => {
+                    if (!doc) {
+                        return res.status(404).send()
+                    }
+                })
+            })
+        });
+        res.status(200).send("Updated")
 
     } catch (error) {
         if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
@@ -165,11 +171,6 @@ app.patch("/Template/find/:template_id", async (req, res) => {
         }
     }
 })
-
-// Listening for api calls
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
-});
 
 
 // creates the template model and populates it with the request body data
@@ -217,16 +218,30 @@ async function makeTemplate(req) {
     return final
 }
 
+// Listening for api calls
+app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`);
+});
+
 
 // creates the experience and project model and populates it with the request body data
 async function createSubSchema(req) {
 
+    let experience_num = 0
+    let project_num = 0
+
+    if (req.body.experiences) {
+        experience_num = req.body.experiences.length
+    }
+
+    if (req.body.projects) {
+        project_num = req.body.projects.length
+    }
+
     let experience_array = []
     let project_array = []
-    const experience_num = req.body.experiences.length
-    const project_num = req.body.projects.length
 
-    for(let i=0; i<experience_num; i++) {
+    for (let i = 0; i < experience_num; i++) {
         let experience = new Experience({
             date: req.body.experiences[i].date,
             description: req.body.experiences[i].description,
@@ -236,7 +251,7 @@ async function createSubSchema(req) {
         experience_array.push(experience)
     }
 
-    for(let j=0; j<project_num; j++) {
+    for (let j = 0; j < project_num; j++) {
         let project = new Project({
             project_name: req.body.projects[j].project_name,
             description: req.body.projects[j].description,
@@ -245,6 +260,7 @@ async function createSubSchema(req) {
         })
         project_array.push(project)
     }
+
 
     return [experience_array, project_array]
 }
