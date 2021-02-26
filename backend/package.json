@@ -7,7 +7,7 @@
     "doc": "doc"
   },
   "scripts": {
-    "start":"node --experimental-modules index.js"
+    "start": "node --experimental-modules index.js"
   },
   "repository": {
     "type": "module",
@@ -18,5 +18,12 @@
   "bugs": {
     "url": "https://github.com/UTMCSC301/final-project-cheddar/issues"
   },
-  "homepage": "https://github.com/UTMCSC301/final-project-cheddar#readme"
+  "homepage": "https://github.com/UTMCSC301/final-project-cheddar#readme",
+  "dependencies": {
+    "connect-mongo": "^4.2.0",
+    "express-session": "^1.17.1",
+    "firebase": "^8.2.9",
+    "firebase-admin": "^9.5.0",
+    "mongoose": "^5.11.18"
+  }
 }
