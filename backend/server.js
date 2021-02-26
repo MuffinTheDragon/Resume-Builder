@@ -41,9 +41,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const session = require("express-session");
 
 app.use(session({
-  secret: 'secret',
-  resave: true,
-  saveUninitialized: true
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
 }));
 
 
@@ -67,13 +67,38 @@ const mongoChecker = (req, res, next) => {
     }
 }
 
+// GET the templates 
+app.get('/Template/find/:template_id', async (req, res) => {
 
+    const _id = req.params.template_id;
 
-// // Firebase Setup 
+    if (!ObjectID(_id)) {
+        res.status(404).send()
+        return;
+    }
 
-// const admin = require("firebase-admin");
-// const serviceAccount = require("./serviceAccountKey.json");
-// const { EDESTADDRREQ } = require("constants");
+    // check mongoose connection established.
+    if (mongoose.connection.readyState != 1) {
+        log('Issue with mongoose connection')
+        res.status(500).send('Internal server error')
+        return;
+    }
+
+    try {
+        const template = await Template.findById(_id)
+        if (!template) {
+            res.status(404).send()
+        }
+        res.send(template)
+    } catch (error) {
+        if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
+            res.status(500).send('Internal server error')
+        } else {
+            res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
+        }
+    }
+
+})
 
 
 // POST 
@@ -103,6 +128,52 @@ app.post('/Template/create', async (req, res) => {
 })
 
 
+// UPDATE 
+
+app.patch("/Template/update/:template_id", async (req, res) => {
+
+    const _template_id = req.params.template_id
+
+    if (!ObjectID(_template_id)) {
+        res.status(404).send()
+        return;
+    }
+
+    // check mongoose connection established.
+    if (mongoose.connection.readyState != 1) {
+        log('Issue with mongoose connection')
+        res.status(500).send('Internal server error')
+        return;
+    }
+
+    try {
+        Template.updateOne({ _id: _template_id }, req.body).then(doc => {
+            if (!doc) {
+                return res.status(404).send()
+            }
+        })
+        const query = Template.where({ _id: _template_id });
+        query.findOne(function (err, temps) {
+            if (err) return handleError(err);
+
+            createSubSchema(req).then(result => {
+                Template.updateOne({ _id: _template_id }, { "experiences": [...temps.experiences, ...result[0]], "projects": [...temps.projects, ...result[1]] }).then(doc => {
+                    if (!doc) {
+                        return res.status(404).send()
+                    }
+                })
+            })
+        });
+        res.status(200).send("Updated")
+
+    } catch (error) {
+        if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
+            res.status(500).send('Internal server error')
+        } else {
+            res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
+        }
+    }
+})
 
 
 /* Following part handles authentication 
@@ -117,25 +188,25 @@ app.use(passport.session());
 
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
-passport.serializeUser(function(user, done) {
-	done(null, user);
+passport.serializeUser(function (user, done) {
+    done(null, user);
 });
 
-passport.deserializeUser(function(user, done) {
-	done(null, user);
+passport.deserializeUser(function (user, done) {
+    done(null, user);
 });
 
 passport.use(new GoogleStrategy({
     clientID: "698522005806-v4bt4q4fje7omd7qs6pj9n6v721bh6gt.apps.googleusercontent.com",
     clientSecret: "PlQYJxHy2oR-wOdt8ENI1vbJ",
     callbackURL: "http://localhost:5000/google/callback"
-  },
-  function(token, tokenSecret, profile, done) {
-      User.findOrCreate(profile.id, profile.emails[0].value,  profile.displayName).then((user) => {
-        console.log(user);
-      return done(null, user);
-    })
-  }
+},
+    function (token, tokenSecret, profile, done) {
+        User.findOrCreate(profile.id, profile.emails[0].value, profile.displayName).then((user) => {
+            console.log(user);
+            return done(null, user);
+        })
+    }
 ));
 
 
@@ -146,30 +217,30 @@ app.get('/google', passport.authenticate('google', { scope: ['profile', 'email']
 
 // Callback after Logging in
 app.get('/google/callback', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }),
-  (req, res) => {
-    // Successful authentication, redirect home.
-    // console.log("Reached here")
-    // res.send('It works!');
-  }
+    (req, res) => {
+        // Successful authentication, redirect home.
+        // console.log("Reached here")
+        // res.send('It works!');
+    }
 );
 
-app.get('/login', (req, res)=> {
-  res.redirect('/google');
+app.get('/login', (req, res) => {
+    res.redirect('/google');
 })
 
 // Logging out of the session
 app.get('/logout', (req, res) => {
-  req.logout();
-  res.send("User successfully logged out!")
-  // res.redirect('/');
+    req.logout();
+    res.send("User successfully logged out!")
+    // res.redirect('/');
 })
 
 // Middleware to protect and authenticate routes
 const verifyAuthenication = (req, res, next) => {
-  if(req.isAuthenticated()){
-    return next();
-  }
-  res.redirect('/google')
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/google')
 }
 
 /*
@@ -178,7 +249,7 @@ const verifyAuthenication = (req, res, next) => {
 
 // For testing, replace with actual homepage later.
 app.get('/', verifyAuthenication, (req, res) => {
-  res.send("Currently Logged In User: " + req.user.displayName)
+    res.send("Currently Logged In User: " + req.user.displayName)
 })
 
 /*
@@ -245,7 +316,10 @@ async function createSubSchema(req) {
         project_num = req.body.projects.length
     }
 
-    for(let i=0; i<experience_num; i++) {
+    let experience_array = []
+    let project_array = []
+
+    for (let i = 0; i < experience_num; i++) {
         let experience = new Experience({
             date: req.body.experiences[i].date,
             description: req.body.experiences[i].description,
@@ -255,7 +329,7 @@ async function createSubSchema(req) {
         experience_array.push(experience)
     }
 
-    for(let j=0; j<project_num; j++) {
+    for (let j = 0; j < project_num; j++) {
         let project = new Project({
             project_name: req.body.projects[j].project_name,
             description: req.body.projects[j].description,
@@ -265,8 +339,9 @@ async function createSubSchema(req) {
         project_array.push(project)
     }
 
+
     return [experience_array, project_array]
 }
 
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port http://localhost:${port}!`))
