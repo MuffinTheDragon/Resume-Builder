@@ -7,7 +7,10 @@
     "doc": "doc"
   },
   "scripts": {
-    "start": "node --experimental-modules index.js"
+
+    "start": "node --experimental-modules server.js"
+
+
   },
   "repository": {
     "type": "module",
@@ -20,10 +23,19 @@
   },
   "homepage": "https://github.com/UTMCSC301/final-project-cheddar#readme",
   "dependencies": {
-    "connect-mongo": "^4.2.0",
+    "body-parser": "^1.19.0",
+    "connect-mongo": "^4.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "express-session": "^1.17.1",
-    "firebase": "^8.2.9",
     "firebase-admin": "^9.5.0",
+    "passport": "^0.4.1",
+    "passport-google-oauth": "^2.0.0",
+    "passport-google-oauth20": "^2.0.0",
+    "validator": "^13.5.2"
+    "connect-mongo": "^4.2.0",
+    "firebase": "^8.2.9",
     "mongoose": "^5.11.18"
+
   }
 }
