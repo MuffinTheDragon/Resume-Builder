@@ -1,0 +1,17 @@
+div.ResumeBuilder {
+    width: 35%;
+    -webkit-box-shadow: 5px 0px 15px 5px #535353; 
+    box-shadow: 5px 0px 15px 5px #535353;
+    min-height: 100vh;
+    height: auto;
+}
+
+h1.ResumeBuilder {
+    color: #17242A;
+    text-transform: capitalize;
+}
+
+hr.ResumeBuilder {
+    background-color: #17242A;
+    width: 100%;
+}
