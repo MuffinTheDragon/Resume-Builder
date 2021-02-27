@@ -24,20 +24,22 @@
   Communicating changes to other teammates (either on Discord or with Jira)
 - Using Jira's Work log to document and compare predicted user story difficulty and time required to complete them
 - Adding photo previews of your work when creating the pull request
+- Group work sessions to maximize productivity
+- Allot 1-2 days at the end of the sprint to refactor all code
 
 ## What are some new practices that you might want to use during next sprint
 
-- Group work sessions to maximize productivity
 - Add linter to code to standardize coding practices & formatting
-- Allot 1-2 days at the end of the sprint to refactor all code
+- Split up tasks on Jira in a more efficient and effective way
 
 ## What are (if any) harmful practices you should stop using during next sprint
 
 - Not giving ample amount of time for multiple group members to evaluate pull requests
 - Not giving ample amount of time to consolidate/refactor code from multiple group members' different tasks
+- Making tasks on Jira too large with too many subtasks
 
-## What was your best/worst experience during sprint 1?
+## What was your best/worst experience during sprint 2?
 
-**Best**: We have a visual product of what we have completed this sprint, and the honour of our TA reading this ;)
+**Best**: Team bonding over reading week! But also getting resume rendering to work where input fields update the resume preview :)
 
-**Worst**: Struggling to find time to work on this sprint between all of our other courses due to overlapping assignment due dates.
+**Worst**: Dealing with how to split up Jira tasks and branches because the Jira tasks started out too large...
