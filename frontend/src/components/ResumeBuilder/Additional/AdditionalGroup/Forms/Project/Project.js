@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from "./Project.module.css";
-import { Row, Col, Accordion, Card } from "react-bootstrap";
+import { Row, Col, Accordion, Card, Modal, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ResumeContext } from "../../../../../../App";
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -44,8 +44,27 @@ const Project = ({id}) => {
         }
         return desc;
     }
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     return (
         <>
+            <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+            </Modal.Header>
+            <Modal.Body className={styles.asdf}>Are you sure you want to delete {project.title}?</Modal.Body>
+            <Modal.Footer>
+                <Button variant="outline-secondary" onClick={handleClose}>
+                Cancel
+                </Button>
+                <Button variant="danger" onClick={deleteProject}>
+                Delete
+                </Button>
+            </Modal.Footer>
+            </Modal>
             <Accordion defaultActiveKey={"0"} className="m-3 mr-5 ml-5">
                 <Card>
                     <Accordion.Toggle as={Card.Header} eventKey={"1"}>
@@ -83,7 +102,7 @@ const Project = ({id}) => {
                             </Row>
                                 
                             <Row className="d-flex justify-content-end mt-4 mr-1">
-                                <button type="button"  className={styles.decline} onClick={(event) => deleteProject(event)} >
+                                <button type="button"  className={styles.decline} onClick={(event) => handleShow()} >
                                     <FontAwesomeIcon icon={faTrashAlt}/>
                                 </button>
                             </Row>
