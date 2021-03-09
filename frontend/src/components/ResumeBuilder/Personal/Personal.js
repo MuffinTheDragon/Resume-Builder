@@ -12,6 +12,7 @@ const Personal = () => {
         const newResumeState = {...resumeState, Personal: updatedPersonal};
         setResume(newResumeState)
     }
+    
     return (
         <div className="d-flex flex-wrap flex-column justify-content-center pt-2 pl-5 pr-5">
             <Row>

@@ -7,22 +7,10 @@ import { ResumeContext } from "../../../App";
 import Project from "./AdditionalGroup/Forms/Project/Project"
 
 let Additional = () => {
-    // let [sectionCards, addSection] = useState({
-    //     "Project": 0,
-    //     "Club": 0,
-    //     "Hackathon": 0,
-    //     "Award": 0,
-    //     "Hobbies": 0,
-    //     "Skills": 0,
-    // });
     let {resumeState, setResume} = useContext(ResumeContext);
-    const projects = resumeState.Projects.map((project, _) => {
+    const projects = resumeState.Projects.map((project) => {
         return <Project key={project.id} id={project.id}/>;
     });
-
-    // let additionalSection = { 
-    //     Projects: []
-    // };
     
     let sections = [
         {icon: faBook, name: "Project"},
@@ -34,12 +22,6 @@ let Additional = () => {
     ];
 
     let addProject = (type) => {
-        // let newCount = sectionCards[type] + 1;
-        // let updatedSectionCard = {
-        //     ...sectionCards
-        // };
-        // updatedSectionCard[type] = newCount;
-        // addSection(updatedSectionCard);
         let newProj = {
             id: Math.random(),
             title: "",
@@ -61,17 +43,14 @@ let Additional = () => {
     ));
 
     return (
-        <>
-            <Row>
-                <Col >
-                    {/* <AdditionalGroup cards={sectionCards}/> */}
-                    {projects}
-                    <div className={"ml-5 mt-3 " + shared.itemButtonGroup}>
-                        {additionalSectionsMenu}
-                    </div>
-                </Col>
-            </Row>
-        </>
+        <Row>
+            <Col >
+                {projects}
+                <div className={"ml-5 mt-3 " + shared.itemButtonGroup}>
+                    {additionalSectionsMenu}
+                </div>
+            </Col>
+        </Row>
     )
 }
 
