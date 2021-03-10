@@ -4,7 +4,8 @@ import {Row, Col } from "react-bootstrap";
 import {faSeedling, faHammer, faCode, faPalette, faAward, faBook} from '@fortawesome/free-solid-svg-icons';
 import ItemButton from '../ItemButton/ItemButton';
 import { ResumeContext } from "../../../App";
-import Project from "./AdditionalGroup/Forms/Project/Project"
+import Project from "./AdditionalGroup/Forms/Project/Project";
+import Hobbies from "./AdditionalGroup/Forms/Hobbies/Hobbies";
 
 let Additional = () => {
     // let [sectionCards, addSection] = useState({
@@ -17,7 +18,14 @@ let Additional = () => {
     // });
     let {resumeState, setResume} = useContext(ResumeContext);
     const projects = resumeState.Projects.map((project, _) => {
+        if (project.title === "Hobbies") {
+            return <Hobbies key={project.id} id ={project.id}/>
+        }
         return <Project key={project.id} id={project.id}/>;
+    });
+
+    const hobbies = resumeState.Hobbies.map((project, _) => {
+        return <Hobbies key={hobbies.id} id ={hobbies.id}/> 
     });
 
     // let additionalSection = { 
@@ -33,6 +41,16 @@ let Additional = () => {
         {icon: faHammer, name: "Skills"}
     ];
 
+    let addSection = (type) => {
+        console.log(type);
+        if (type === "Project") {
+            addProject();
+        }
+        else if (type === "Hobbies") {
+            addHobbies();
+        }
+    };
+
     let addProject = (type) => {
         // let newCount = sectionCards[type] + 1;
         // let updatedSectionCard = {
@@ -40,7 +58,7 @@ let Additional = () => {
         // };
         // updatedSectionCard[type] = newCount;
         // addSection(updatedSectionCard);
-        let newProj = {
+        let newProj = { //empty project
             id: Math.random(),
             title: "",
             subtitle: "",
@@ -53,11 +71,22 @@ let Additional = () => {
         setResume(updatedResumeState);
     };
 
+    let addHobbies = (type) => {
+        let newHobbies = { //empty project
+            id: Math.random(),
+            title: "Hobbies",
+            desc: []
+        }
+        let updatedProjects = [...resumeState.Projects, newHobbies];
+        let updatedResumeState = {...resumeState, Projects: updatedProjects};
+        setResume(updatedResumeState);
+    };
+
     let additionalSectionsMenu = sections.map((section, index) => (
         <ItemButton icon={section.icon}
-              name={section.name}
-              addNewSection={() => addProject(section.name)}
-              key={index}/>
+            name={section.name}
+            addNewSection={() => addSection(section.name)}
+            key={index}/>
     ));
 
     return (

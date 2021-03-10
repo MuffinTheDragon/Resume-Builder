@@ -17,7 +17,7 @@ const Resume = () => {
         Achievements: [],
         EducationHistory: [],
         Skills: [],
-        CourseWork: []
+        CourseWork: [],
     };
 
     let {resumeState} = useContext(ResumeContext);
@@ -51,6 +51,7 @@ const Resume = () => {
                     isCollection = !isCollection;
                     component = <CollectionTemplate key={i} items={resume[key]}/>
                     break;
+                case "Hobbies":
                 default:
                     break;            
             }

@@ -91,7 +91,8 @@ const App = () => {
         }],
         EducationHistory: {},
         Skills: [],
-        CourseWork: []
+        CourseWork: [],
+        Hobbies: []
     };
     const [resumeState, setResume] = useReducer(reducer, DummyResume);
 
