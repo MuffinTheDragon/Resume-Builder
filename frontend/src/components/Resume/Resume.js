@@ -80,8 +80,8 @@ const Resume = () => {
                 <EducationTemplate school={resume.EducationHistory.school} degree={resume.EducationHistory.degree} start_date={resume.EducationHistory.startDate} end_date={resume.EducationHistory.endDate} gpa={resume.EducationHistory.gpa}/>
                 </>
                 }
+                {resumeComponents.Achievements}
                 <HobbiesTemplate desc="Sleeping, Gaming" />
-                {resumeComponents.Achievements}     
                 {resumeComponents.Skills}
                 {resumeComponents.CourseWork}
                 </div>
