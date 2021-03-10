@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from "./ExperienceForm.module.css";
-import {Row, Col, Accordion, Card } from "react-bootstrap";
+import {Row, Col, Accordion, Card} from "react-bootstrap";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 
@@ -12,7 +12,7 @@ function ExperienceForm(prop) {
     }
 
     return (
-        <>
+    <>
             <Accordion defaultActiveKey={"0"}>
                 <Card>
                     <Accordion.Toggle as={Card.Header} eventKey={"0"}>
