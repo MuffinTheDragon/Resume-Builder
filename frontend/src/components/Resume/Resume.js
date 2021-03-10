@@ -8,6 +8,7 @@ import ExperienceTemplate from "../Resume/ExperienceTemplate/ExperienceTemplate"
 import EducationTemplate from "./EducationTemplate/EducationTemplate";
 import AchievementsTemplate from "./AchievementsTemplate/AchievementsTemplate";
 import CollectionTemplate from "./CollectionTemplate/CollectionTemplate";
+import HobbiesTemplate from "./HobbiesTemplate/HobbiesTemplate";
 import { ResumeContext } from "../../App";
 
 const Resume = () => {
@@ -17,6 +18,7 @@ const Resume = () => {
         Achievements: [],
         EducationHistory: [],
         Skills: [],
+        Hobbies: [],
         CourseWork: [],
     };
 
@@ -52,6 +54,8 @@ const Resume = () => {
                     component = <CollectionTemplate key={i} items={resume[key]}/>
                     break;
                 case "Hobbies":
+                    component = <HobbiesTemplate key={i} hobbies={data.hobbies}/>
+                    break;
                 default:
                     break;            
             }
@@ -76,6 +80,7 @@ const Resume = () => {
                 <EducationTemplate school={resume.EducationHistory.school} degree={resume.EducationHistory.degree} start_date={resume.EducationHistory.startDate} end_date={resume.EducationHistory.endDate} gpa={resume.EducationHistory.gpa}/>
                 </>
                 }
+                <HobbiesTemplate desc="Sleeping, Gaming" />
                 {resumeComponents.Achievements}     
                 {resumeComponents.Skills}
                 {resumeComponents.CourseWork}
