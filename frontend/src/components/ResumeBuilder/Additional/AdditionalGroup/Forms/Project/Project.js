@@ -55,13 +55,13 @@ const Project = ({id}) => {
             <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
             </Modal.Header>
-            <Modal.Body className={styles.asdf}>Are you sure you want to delete {project.title}?</Modal.Body>
+            <Modal.Body className={styles.modal}>Are you sure you want to delete {project.title}?</Modal.Body>
             <Modal.Footer>
                 <Button variant="outline-secondary" onClick={handleClose}>
-                Cancel
+                    Cancel
                 </Button>
                 <Button variant="danger" onClick={deleteProject}>
-                Delete
+                    Delete
                 </Button>
             </Modal.Footer>
             </Modal>
