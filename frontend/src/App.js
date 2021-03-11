@@ -23,8 +23,8 @@ const App = () => {
             id: 0,
             title: "Teaching Assistant",
             subtitle: "University of Toronto",
-            startDate: "Jan 2020",
-            endDate: "Dec 2020",
+            startDate: "2020-01",
+            endDate: "2020-12",
             location: "Toronto, ON",
             desc: ["Lorem Ipsum", "pancakes and waffles"]
         },
@@ -32,8 +32,8 @@ const App = () => {
             id: 1,
             title: "Teaching Assistant",
             subtitle: "University of Toronto",
-            startDate: "Jan 2020",
-            endDate: "Dec 2020",
+            startDate: "2020-01",
+            endDate: "2020-12",
             location: "Toronto, ON",
             desc: ["Lorem Ipsum", "pancakes and waffles"]
         },
@@ -41,8 +41,8 @@ const App = () => {
             id: 2,
             title: "Professional Potato",
             subtitle: "Home",
-            startDate: "When I was born",
-            endDate: "Till I die",
+            startDate: "2019-03",
+            endDate: "2020-01",
             location: "Home",
             desc: ["Potato", "Professional", "Yes"]
         },
@@ -50,8 +50,8 @@ const App = () => {
             id: 3,
             title: "Professional Waffle",
             subtitle: "wafflehouse",
-            startDate: "When I was born",
-            endDate: "Till I die",
+            startDate: "2018-05",
+            endDate: "2019-02",
             location: "Home",
             desc: ["Potato", "Professional", "Yes"]
         }],
