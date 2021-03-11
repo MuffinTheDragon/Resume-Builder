@@ -20,7 +20,7 @@ mongoose.set('useFindAndModify', false);
 
 // User Schema
 const { User } = require("./models/user");
-
+const { ObjectID } = require('mongodb')
 
 const { Template, Experience, Project } = require("./models/resumeTemplate")
 
@@ -100,10 +100,46 @@ app.get('/Template/find/:template_id', async (req, res) => {
 
 })
 
+// DELETE 
+app.delete('/Template/delete/:id', async (req, res) => {
+	const _id = req.params.id;
+   
+	if (!ObjectID(_id)) {
+		res.status(404).send()
+		return;
+	}
+
+	// check mongoose connection established.
+	if (mongoose.connection.readyState != 1) {
+		log('Issue with mongoose connection')
+		res.status(500).send('Internal server error')
+		return;
+	}
+
+	try {
+        Template.deleteOne({"_id": ObjectID(_id)}).then((result) =>{
+            if (result.deletedCount === 0) {
+                res.status(404).send(); 
+                return; 
+            }
+            res.status(200).send(); 
+
+        }).catch((error) => { 
+            res.status(400).send(error); 
+        })
+        
+	} catch (error) {
+		if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
+			res.status(500).send('Internal server error')
+		} else {
+			res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
+		}
+	}
+
+})
 
 // POST 
 app.post('/Template/create', async (req, res) => {
-    // Add code here
     // check mongoose connection established.
 
     if (mongoose.connection.readyState != 1) {
