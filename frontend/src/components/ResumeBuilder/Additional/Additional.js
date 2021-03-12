@@ -4,6 +4,7 @@ import {Row, Col } from "react-bootstrap";
 import {faSeedling, faHammer, faCode, faPalette, faAward, faBook} from '@fortawesome/free-solid-svg-icons';
 import ItemButton from '../ItemButton/ItemButton';
 import { ResumeContext } from "../../../App";
+import Achievement from "./AdditionalGroup/Forms/Achievement/Achievement"
 import Project from "./AdditionalGroup/Forms/Project/Project";
 import Hobbies from "./AdditionalGroup/Forms/Hobbies/Hobbies";
 
@@ -56,40 +57,59 @@ let Additional = () => {
     //     return <Hobbies key={hobbies.id} id ={hobbies.id}/> 
     // });
 
+    const achievements = resumeState.Achievements.map((achievement, _) => {
+        return <Achievement key={achievement.id} id={achievement.id}/>;
+    })
+
+    // let additionalSection = { 
+    //     Projects: []
+    // };
     
     let sections = [
         {icon: faBook, name: "Project"},
         {icon: faSeedling, name: "Club"},
         {icon: faCode, name: "Hackathon"},
-        {icon: faAward, name: "Award"},
-        {icon: faPalette, name: "Hobbies"}
+        {icon: faAward, name: "Achievement"},
+        {icon: faPalette, name: "Hobbies"},
+        {icon: faHammer, name: "Skills"}
     ];
 
     let addSection = (type) => {
-        switch(type){
-            case "Projects":
-                addProject();
-                break;
-            case "Hobbies":
-                // addHobby();
-                break;    
-        }
-    };
+        // let newCount = sectionCards[type] + 1;
+        // let updatedSectionCard = {
+        //     ...sectionCards
+        // };
+        // updatedSectionCard[type] = newCount;
+        // addSection(updatedSectionCard);
 
-    let addProject = (type) => {
-        let id = Math.random();
-        additionalCards["Projects"].push(<Project id={id} key={id}/>)
-        let newProj = { //empty project
-            id: Math.random(),
-            title: "",
-            subtitle: "",
-            startDate: "",
-            endDate: "",
-            desc: []
+        let updatedResumeState = null;
+        switch(type){
+                    
+            case "Project":
+                let newProj = {
+                    id: Math.random(),
+                    title: "",
+                    subtitle: "",
+                    startDate: "",
+                    endDate: "",
+                    desc: []
+                }
+                let updatedProjects = [...resumeState.Projects, newProj];
+                updatedResumeState = {...resumeState, Projects: updatedProjects};
+                setResume(updatedResumeState);
+                break;
+            
+            case "Achievement":
+                let newAch = {
+                    id: Math.random(),
+                    title: "",
+                    desc: ""
+                }
+                let updatedAchievements = [...resumeState.Achievements, newAch];
+                updatedResumeState = {...resumeState, Achievements: updatedAchievements};
+                setResume(updatedResumeState);
+                break;
         }
-        let updatedProjects = [...resumeState.Projects, newProj];
-        let updatedResumeState = {...resumeState, Projects: updatedProjects};
-        setResume(updatedResumeState);
     };
 
     // let addHobbies = (type) => {
@@ -105,15 +125,16 @@ let Additional = () => {
 
     let additionalSectionsMenu = sections.map((section, index) => (
         <ItemButton icon={section.icon}
-            name={section.name}
-            addNewSection={() => addSection(section.name)}
-            key={index}/>
+              name={section.name}
+              
+              addNewSection={() => addSection(section.name)}
+              key={index}/>
     ));
 
     return (
         <Row>
             <Col >
-                {/* <AdditionalGroup cards={sectionCards}/> */}
+                {achievements}
                 {additionalCards.Projects}
                 {additionalCards.Hobbies}
                 <div className={"ml-5 mt-3 " + shared.itemButtonGroup}>

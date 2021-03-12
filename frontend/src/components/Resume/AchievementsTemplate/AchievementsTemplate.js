@@ -7,7 +7,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 function AchievementsTemplate({title, desc}) {
     return (
         <div className="m-2">
-            <div className={styles.trophy}><FontAwesomeIcon icon={faTrophy} /></div>
+            <div className={styles.trophy}>
+            {(title === "" && desc === "") ? <></> : <FontAwesomeIcon icon={faTrophy}/>}
+            </div>
             <div>
                 <h4>{title}</h4>
                 <span className={TemplateStyles.date}>{desc}</span>
