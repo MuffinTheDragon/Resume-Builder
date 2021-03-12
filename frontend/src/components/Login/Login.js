@@ -7,14 +7,32 @@ const Login = (props) => {
     
     // const history = useHistory();
     
-    const signInWithGoogle = () => {
-        fetch("/google").then(response => window.location.href = '/')
-    }
+    // const signInWithGoogle = () => {
+        
+
+
+    //     const request = new Request(`/google`, {
+    //         method: "get",
+    //     });
+    //     fetch(request)
+    //         .then(res => {
+    //             if (res.status === 200){
+    //             // register successful
+    //             // decide what to do after user clicks register
+    //                 console.log("User logged in!")
+    //                 window.location.href = '/'
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.log(error);
+    //         })        
+    // }
 
         return (
             <div className="loginComp">
                 <div className="loginButton">
-                    <GoogleButton onClick={signInWithGoogle} />
+                    <GoogleButton onClick={() => window.location.href = '/google'} />
+                    <GoogleButton />
                 </div>
             </div>
         )
