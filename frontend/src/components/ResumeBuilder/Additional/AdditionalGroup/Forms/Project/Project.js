@@ -51,7 +51,21 @@ const Project = ({id}) => {
     const handleShow = () => setShow(true);
 
     return (
-        <Accordion defaultActiveKey={"0"} className="m-3 mr-5 ml-5">
+        <>
+        <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+            </Modal.Header>
+            <Modal.Body className={styles.modal}>Are you sure you want to delete {project.title}?</Modal.Body>
+            <Modal.Footer>
+                <Button variant="outline-secondary" onClick={handleClose}>
+                    Cancel
+                </Button>
+                <Button variant="danger" onClick={deleteProject}>
+                    Delete
+                </Button>
+            </Modal.Footer>
+        </Modal>
+        <Accordion defaultActiveKey={"0"} className="mb-3 mr-5 ml-5">
             <Card>
                 <Accordion.Toggle as={Card.Header} eventKey={"1"}>
                     <h2>{project.title === "" ? "New Project" : project.title}</h2>
@@ -88,7 +102,7 @@ const Project = ({id}) => {
                         </Row>
                             
                         <Row className="d-flex justify-content-end mt-4 mr-1">
-                            <button type="button"  className={styles.decline} onClick={(event) => deleteProject(event)} >
+                            <button type="button"  className={styles.decline} onClick={(event) => handleShow()} >
                                 <FontAwesomeIcon icon={faTrashAlt}/>
                             </button>
                         </Row>
@@ -96,6 +110,7 @@ const Project = ({id}) => {
                 </Accordion.Collapse>
             </Card>
         </Accordion>
+        </>
     )
 };
 

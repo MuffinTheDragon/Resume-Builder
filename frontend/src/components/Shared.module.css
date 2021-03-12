@@ -21,3 +21,8 @@
     flex-direction: row;
     flex-wrap: wrap;
 }
+
+.subtitle {
+    font-size: 1.25rem;
+    display: block;
+}
