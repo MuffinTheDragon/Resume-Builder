@@ -7,7 +7,6 @@ import { ResumeContext } from "../../../App";
 import Achievement from "./AdditionalGroup/Forms/Achievement/Achievement"
 import Project from "./AdditionalGroup/Forms/Project/Project";
 import Hobbies from "./AdditionalGroup/Forms/Hobbies/Hobbies";
-import Clubs from "./AdditionalGroup/Forms/Clubs/Clubs";
 
 let Additional = () => {
     let {resumeState, setResume} = useContext(ResumeContext);
@@ -132,6 +131,7 @@ let Additional = () => {
                 {/* {additionalCards.Hackathons} */}
                 <span className={"ml-5 " + shared.subtitle}>Hobbies</span>
                 {additionalCards.Hobbies}
+                {additionalCards.Hackathon}
                 <div className={"ml-5 mt-3 " + shared.itemButtonGroup}>
                     {additionalSectionsMenu}
                 </div>
