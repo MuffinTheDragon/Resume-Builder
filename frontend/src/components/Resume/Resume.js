@@ -30,12 +30,14 @@ const Resume = () => {
     let component;
     for (let key in resume) {
         // Rendering the header if there is data available to process
-        if (key !== "Personal" && resume[key].length !== 0){
+        if ((key === "Hobbies" && resume["Hobbies"].length >= 1 && resume["Hobbies"][0] !== "") ||
+         (key !== "Personal" && resume[key].length !== 0) && key !== "Hobbies"){
             let header = key.replace(/([A-Z])/g, ' $1').replace(/^./, ((str) => {
                 return str.toUpperCase();
             }));
             resumeComponents[key].push(<HeaderTemplate key={header} header={header}/>)
         }
+
         for (let i=0; i < resume[key].length; i++){
             let data = resume[key][i];
             let isCollection = false;
@@ -57,7 +59,8 @@ const Resume = () => {
                     component = <CollectionTemplate key={i} items={resume[key]}/>
                     break;
                 case "Hobbies":
-                    component = <HobbiesTemplate key={i} hobbies={data.hobbies}/>
+                    isCollection = !isCollection;
+                    component = <HobbiesTemplate key={i} hobbies={resume[key]}/>
                     break;
                 case "Clubs":
                     component = <ClubsTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} desc={data.desc}/>
@@ -70,7 +73,7 @@ const Resume = () => {
             }
         }
     }
-    return ( 
+    return (
         <div id={styles.ResumeRender}>
             <PersonalTemplate fname={resume.Personal.fname} lname={resume.Personal.lname} email={resume.Personal.email} telephone={resume.Personal.telephone} website={resume.Personal.website} github={resume.Personal.github}/>
             <div className="d-flex pl-5 pr-5 pb-5">
@@ -87,7 +90,7 @@ const Resume = () => {
                 </>
                 }
                 {resumeComponents.Achievements}
-                <HobbiesTemplate desc="Sleeping, Gaming" />
+                {resumeComponents.Hobbies}
                 {resumeComponents.Skills}
                 {resumeComponents.CourseWork}
                 </div>

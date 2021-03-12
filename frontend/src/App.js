@@ -98,6 +98,7 @@ const App = () => {
             title: "Cool Kids Club",
             desc: "coolin' around"
         }],
+        Hobbies: ["Sleeping", "Gaming", "Cooking", "Skiing"]
     };
     const [resumeState, setResume] = useReducer(reducer, DummyResume);
 
