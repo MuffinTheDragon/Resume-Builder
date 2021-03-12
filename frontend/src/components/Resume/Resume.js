@@ -60,7 +60,7 @@ const Resume = () => {
                     component = <HobbiesTemplate key={i} hobbies={data.hobbies}/>
                     break;
                 case "Clubs":
-                    // component = <ClubsTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} desc={data.desc}/>
+                    component = <ClubsTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} desc={data.desc}/>
                 default:
                     break;            
             }
