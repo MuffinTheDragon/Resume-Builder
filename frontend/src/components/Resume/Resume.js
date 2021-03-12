@@ -23,7 +23,7 @@ const Resume = () => {
         Skills: [],
         Clubs: [],
         Hobbies: [],
-        Hackathon: [],
+        Hackathons: [],
         CourseWork: [],
     };
 
@@ -67,7 +67,7 @@ const Resume = () => {
                 case "Clubs":
                     component = <ClubsTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} desc={data.desc}/>
                     break;
-                case "Hackathon":
+                case "Hackathons":
                     component = <HackathonTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} desc={data.desc}/>
                     break;
                 default:
@@ -87,7 +87,7 @@ const Resume = () => {
                     {resumeComponents.Experience}
                     {resumeComponents.Projects}
                     {resumeComponents.Clubs}
-                    {resumeComponents.Hackathon}
+                    {resumeComponents.Hackathons}
                 </div>
                 <div className={styles.w35}>
                 {resume["EducationHistory"].school === "" || Object.keys(resume["EducationHistory"]).length === 0 ? '' :

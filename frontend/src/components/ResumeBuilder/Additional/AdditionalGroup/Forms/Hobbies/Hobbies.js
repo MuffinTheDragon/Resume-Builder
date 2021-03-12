@@ -15,9 +15,6 @@ const Hobbies = () => {
     }
 
     const deleteHobbies = (event) => {
-        // let updatedProjects = [...resumeState.Projects].filter(proj => proj.id !== id);
-        // const newResumeState = {...resumeState, Projects: updatedProjects};
-        // setResume(newResumeState);
     }
 
     const [show, setShow] = useState(false);

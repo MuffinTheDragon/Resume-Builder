@@ -75,13 +75,13 @@ const App = () => {
             desc: ["coolin' around"]
         }],
         Hobbies: ["Sleeping", "Gaming", "Cooking", "Skiing"],
-        Hackathon: [{
+        Hackathons: [{
             id: 0,
-            title: "motion tracking",
-            subtitle: "Very pog",
-            startDate: "2021",
-            endDate: "2021",
-            desc: ["twitch.tv/XxpoggertchampionchrisxX42"]
+            title: "BuddyStudyOnline",
+            subtitle: "Study with a buddy now",
+            startDate: "2021-03",
+            endDate: "2021-03",
+            desc: ["Real time chat", "Video chat with others"]
         }],
     };
     const [resumeState, setResume] = useReducer(reducer, DummyResume);

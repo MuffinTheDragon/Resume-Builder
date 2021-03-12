@@ -7,6 +7,8 @@ import { ResumeContext } from "../../../App";
 import Achievement from "./AdditionalGroup/Forms/Achievement/Achievement"
 import Project from "./AdditionalGroup/Forms/Project/Project";
 import Hobbies from "./AdditionalGroup/Forms/Hobbies/Hobbies";
+import Clubs from "./AdditionalGroup/Forms/Clubs/Clubs";
+import Hackathon from "./AdditionalGroup/Forms/Hackathon/Hackathon";
 
 let Additional = () => {
     let {resumeState, setResume} = useContext(ResumeContext);
@@ -33,12 +35,15 @@ let Additional = () => {
                 case "Clubs":
                     component = <Clubs key={id} id={id}/>
                     break;
+                case "Hackathons":
+                    component = <Hackathon key={id} id={id}/>
+                    break;
                 case "Hobbies":
                     component = <Hobbies key={i}/>
                     isSingleComponent = true;
                     break;
                 case "Achievements":
-                    component = <Achievement key={id} id={id} />
+                    component = <Achievement key={id} id={id}/>
                     break;
                 default:
                     isAdditionalCard = false;
@@ -108,6 +113,19 @@ let Additional = () => {
                     setResume(updatedResumeState);
                 }
                 break;
+            case "Hackathons":
+                let newHackathon = {
+                    id: Math.random(),
+                    title: "",
+                    subtitle: "",
+                    startDate: "",
+                    endDate: "",
+                    desc: []
+                }
+                let updatedHackathons = [...resumeState.Hackathons, newHackathon];
+                updatedResumeState = {...resumeState, Hackathons: updatedHackathons};
+                setResume(updatedResumeState);
+                break;
         }
     };
 
@@ -121,17 +139,16 @@ let Additional = () => {
     return (
         <Row>
             <Col>
-                <span className={"ml-5 " + shared.subtitle}>Projects</span>
+                {additionalCards.Projects.length === 0 ? <></> :<span className={"ml-5 " + shared.subtitle}>Projects</span>}
                 {additionalCards.Projects}
-                <span className={"ml-5 " + shared.subtitle}>Clubs</span>
+                {additionalCards.Clubs.length === 0 ? <></> : <span className={"ml-5 " + shared.subtitle}>Clubs</span>}
                 {additionalCards.Clubs}
-                <span className={"ml-5 " + shared.subtitle}>Achievements</span>
+                {additionalCards.Achievements.length === 0 ? <></> : <span className={"ml-5 " + shared.subtitle}>Achievements</span>}
                 {additionalCards.Achievements}
-                <span className={"ml-5 " + shared.subtitle}>Hackathons</span>
-                {/* {additionalCards.Hackathons} */}
-                <span className={"ml-5 " + shared.subtitle}>Hobbies</span>
+                {additionalCards.Hackathons.length === 0 ? <></> : <span className={"ml-5 " + shared.subtitle}>Hackathons</span>}
+                {additionalCards.Hackathons}
+                {additionalCards.Hobbies.length === 0 ? <></> : <span className={"ml-5 " + shared.subtitle}>Hobbies</span>}
                 {additionalCards.Hobbies}
-                {additionalCards.Hackathon}
                 <div className={"ml-5 mt-3 " + shared.itemButtonGroup}>
                     {additionalSectionsMenu}
                 </div>
