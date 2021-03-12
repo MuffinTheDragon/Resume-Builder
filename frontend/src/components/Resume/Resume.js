@@ -9,6 +9,7 @@ import EducationTemplate from "./EducationTemplate/EducationTemplate";
 import AchievementsTemplate from "./AchievementsTemplate/AchievementsTemplate";
 import CollectionTemplate from "./CollectionTemplate/CollectionTemplate";
 import ClubsTemplate from "./ClubsTemplate/ClubsTemplate";
+import HobbiesTemplate from "./HobbiesTemplate/HobbiesTemplate";
 import { ResumeContext } from "../../App";
 import Clubs from '../ResumeBuilder/Additional/AdditionalGroup/Forms/Clubs/Clubs';
 
@@ -20,6 +21,7 @@ const Resume = () => {
         EducationHistory: [],
         Skills: [],
         Clubs: [],
+        Hobbies: [],
         CourseWork: [],
     };
 
@@ -55,8 +57,10 @@ const Resume = () => {
                     component = <CollectionTemplate key={i} items={resume[key]}/>
                     break;
                 case "Hobbies":
+                    component = <HobbiesTemplate key={i} hobbies={data.hobbies}/>
+                    break;
                 case "Clubs":
-                    component = <ClubsTemplate key={i} />
+                    // component = <ClubsTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} desc={data.desc}/>
                 default:
                     break;            
             }
@@ -82,7 +86,8 @@ const Resume = () => {
                 <EducationTemplate school={resume.EducationHistory.school} degree={resume.EducationHistory.degree} start_date={resume.EducationHistory.startDate} end_date={resume.EducationHistory.endDate} gpa={resume.EducationHistory.gpa}/>
                 </>
                 }
-                {resumeComponents.Achievements}     
+                {resumeComponents.Achievements}
+                <HobbiesTemplate desc="Sleeping, Gaming" />
                 {resumeComponents.Skills}
                 {resumeComponents.CourseWork}
                 </div>

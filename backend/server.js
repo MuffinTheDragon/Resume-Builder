@@ -67,149 +67,6 @@ const mongoChecker = (req, res, next) => {
     }
 }
 
-// GET the templates 
-app.get('/Template/find/:template_id', async (req, res) => {
-
-    const _id = req.params.template_id;
-
-    if (!ObjectID(_id)) {
-        res.status(404).send()
-        return;
-    }
-
-    // check mongoose connection established.
-    if (mongoose.connection.readyState != 1) {
-        log('Issue with mongoose connection')
-        res.status(500).send('Internal server error')
-        return;
-    }
-
-    try {
-        const template = await Template.findById(_id)
-        if (!template) {
-            res.status(404).send()
-        }
-        res.send(template)
-    } catch (error) {
-        if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
-            res.status(500).send('Internal server error')
-        } else {
-            res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
-        }
-    }
-
-})
-
-// DELETE 
-app.delete('/Template/delete/:id', async (req, res) => {
-	const _id = req.params.id;
-   
-	if (!ObjectID(_id)) {
-		res.status(404).send()
-		return;
-	}
-
-	// check mongoose connection established.
-	if (mongoose.connection.readyState != 1) {
-		log('Issue with mongoose connection')
-		res.status(500).send('Internal server error')
-		return;
-	}
-
-	try {
-        Template.deleteOne({"_id": ObjectID(_id)}).then((result) =>{
-            if (result.deletedCount === 0) {
-                res.status(404).send(); 
-                return; 
-            }
-            res.status(200).send(); 
-
-        }).catch((error) => { 
-            res.status(400).send(error); 
-        })
-        
-	} catch (error) {
-		if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
-			res.status(500).send('Internal server error')
-		} else {
-			res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
-		}
-	}
-
-})
-
-// POST 
-app.post('/Template/create', async (req, res) => {
-    // check mongoose connection established.
-
-    if (mongoose.connection.readyState != 1) {
-        log('Issue with mongoose connection')
-        res.status(500).send('Internal server error')
-        return;
-    }
-
-    let template = await makeTemplate(req)
-
-    try {
-        const final = await template.save()
-        res.status(200).send(final);
-
-    } catch (error) {
-        if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
-            res.status(500).send('Internal server error')
-        } else {
-            res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
-        }
-    }
-})
-
-
-// UPDATE 
-
-app.patch("/Template/update/:template_id", async (req, res) => {
-
-    const _template_id = req.params.template_id
-
-    if (!ObjectID(_template_id)) {
-        res.status(404).send()
-        return;
-    }
-
-    // check mongoose connection established.
-    if (mongoose.connection.readyState != 1) {
-        log('Issue with mongoose connection')
-        res.status(500).send('Internal server error')
-        return;
-    }
-
-    try {
-        Template.updateOne({ _id: _template_id }, req.body).then(doc => {
-            if (!doc) {
-                return res.status(404).send()
-            }
-        })
-        const query = Template.where({ _id: _template_id });
-        query.findOne(function (err, temps) {
-            if (err) return handleError(err);
-
-            createSubSchema(req).then(result => {
-                Template.updateOne({ _id: _template_id }, { "experiences": [...temps.experiences, ...result[0]], "projects": [...temps.projects, ...result[1]] }).then(doc => {
-                    if (!doc) {
-                        return res.status(404).send()
-                    }
-                })
-            })
-        });
-        res.status(200).send("Updated")
-
-    } catch (error) {
-        if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
-            res.status(500).send('Internal server error')
-        } else {
-            res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
-        }
-    }
-})
 
 
 /* Following part handles authentication 
@@ -288,8 +145,200 @@ app.get('/', verifyAuthenication, (req, res) => {
     res.send("Currently Logged In User: " + req.user.displayName)
 })
 
+
+
 /*
-=============== Routes =====================
+=============== API Requests =====================
+*/
+
+
+// POST 
+app.post('/Template', async (req, res) => {
+
+    if (!req.user) {
+        res.status(401).send()
+        return;
+    }
+
+    // check mongoose connection established.
+    if (mongoose.connection.readyState != 1) {
+        log('Issue with mongoose connection')
+        res.status(500).send('Internal server error')
+        return;
+    }
+
+    let template = await makeTemplate(req)
+
+    try {
+        console.log("before");
+        const final = await template.save()
+        console.log("after");
+        res.status(200).send(final);
+
+    } catch (error) {
+        if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
+            res.status(500).send('Internal server error')
+        } else {
+            res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
+        }
+    }
+})
+
+
+// GET the templates 
+app.get('/Template/:template_id', async (req, res) => {
+
+    const _id = req.params.template_id;
+
+    if (!req.user) {
+        res.status(401).send()
+        return;
+    }
+
+    // check mongoose connection established.
+    if (mongoose.connection.readyState != 1) {
+        log('Issue with mongoose connection')
+        res.status(500).send('Internal server error')
+        return;
+    }
+
+    if (!ObjectID(_id)) {
+        res.status(404).send()
+        return;
+    }
+
+    try {
+        const template = await Template.findById(_id)
+        if (!template) {
+            res.status(404).send()
+        } else if(template.userid.id == req.user.id) {
+            res.send(template)
+        } else {
+            console.log("there");
+            res.status(401).send()
+        }
+    } catch (error) {
+        if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
+            res.status(500).send('Internal server error')
+        } else {
+            res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
+        }
+    }
+
+})
+
+
+// UPDATE 
+app.patch("/Template/:template_id", async (req, res) => {
+
+    const _template_id = req.params.template_id
+
+    if (!req.user) {
+        res.status(401).send()
+        return;
+    }
+
+    // check mongoose connection established.
+    if (mongoose.connection.readyState != 1) {
+        log('Issue with mongoose connection')
+        res.status(500).send('Internal server error')
+        return;
+    }
+
+    if (!ObjectID(_template_id)) {
+        res.status(404).send()
+        return;
+    }
+
+    const template = await Template.findOne({ _id: _template_id, userid: req.user })
+    if (!template) {
+        res.status(404).send()
+        return;
+    }
+    
+
+    try {
+        Template.updateOne({ _id: _template_id }, req.body).then(doc => {
+            if (!doc) {
+                return res.status(404).send()
+            }
+        })
+        const query = Template.where({ _id: _template_id });
+        query.findOne(function (err, temps) {
+            if (err) return handleError(err);
+
+            createSubSchema(req).then(result => {
+                Template.updateOne({ _id: _template_id }, { "experiences": [...temps.experiences, ...result[0]], "projects": [...temps.projects, ...result[1]] }).then(doc => {
+                    if (!doc) {
+                        return res.status(404).send()
+                    }
+                })
+            })
+        });
+        res.status(200).send("Updated")
+
+    } catch (error) {
+        if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
+            res.status(500).send('Internal server error')
+        } else {
+            res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
+        }
+    }
+})
+
+
+// DELETE 
+app.delete('/Template/:template_id', async (req, res) => {
+	const _template_id = req.params.template_id
+
+    if (!req.user) {
+        res.status(401).send()
+        return;
+    }
+
+	// check mongoose connection established.
+	if (mongoose.connection.readyState != 1) {
+		log('Issue with mongoose connection')
+		res.status(500).send('Internal server error')
+		return;
+	}
+
+    if (!ObjectID(_template_id)) {
+		res.status(404).send()
+		return;
+	}
+
+    const template = await Template.findOne({ _id: _template_id, userid: req.user })
+    if (!template) {
+        res.status(404).send()
+        return;
+    }
+
+	try {
+        Template.deleteOne({"_id": ObjectID(_template_id)}).then((result) =>{
+            if (result.deletedCount === 0) {
+                res.status(404).send(); 
+                return; 
+            }
+            res.status(200).send(); 
+
+        }).catch((error) => { 
+            res.status(400).send(error); 
+        })
+        
+	} catch (error) {
+		if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
+			res.status(500).send('Internal server error')
+		} else {
+			res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
+		}
+	}
+
+})
+
+
+/*
+=============== Helper Functions =====================
 */
 
 // creates the template model and populates it with the request body data
@@ -298,7 +347,7 @@ async function makeTemplate(req) {
     const final = createSubSchema(req).then(result => {
 
         const template = new Template({
-            userid: req.body.userid,
+            userid: req.user,
             personal: {
                 name: req.body.name,
                 email: req.body.email,
