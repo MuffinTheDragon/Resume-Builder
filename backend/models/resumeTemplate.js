@@ -51,7 +51,7 @@ const ProjectSchema = new mongoose.Schema({
 // Creating the resume template through mongoose schema
 const TemplateSchema = new mongoose.Schema({
     userid: {
-        type: String,
+        type: Object,
         required: true,
         trim: true
     },
