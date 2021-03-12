@@ -15,12 +15,7 @@ const Achievement = ({id}) => {
         let updatedAchievements = [...resumeState.Achievements]
         for(let achIdx in updatedAchievements){
             if (updatedAchievements[achIdx].id === id) {
-                let val;
-                if(section === "desc") {
-                    val = event.target.value.split("\n");
-                } else {
-                    val = event.target.value;
-                }
+                let val = event.target.value;
                 updatedAchievements[achIdx][section] = val;
             }
         }
@@ -34,16 +29,6 @@ const Achievement = ({id}) => {
         setResume(newResumeState);
     }
 
-    const getDesc = (data) => {
-        let desc = "";
-        for(let i = 0; i < data.length; i++){
-            desc += data[i];
-            if (i !== data.length - 1){
-                desc += "\n";
-            }
-        }
-        return desc;
-    }
     return (
         <>
             <Accordion defaultActiveKey={"0"} className="m-3 mr-5 ml-5">

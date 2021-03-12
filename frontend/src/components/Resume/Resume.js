@@ -8,6 +8,7 @@ import ExperienceTemplate from "../Resume/ExperienceTemplate/ExperienceTemplate"
 import EducationTemplate from "./EducationTemplate/EducationTemplate";
 import AchievementsTemplate from "./AchievementsTemplate/AchievementsTemplate";
 import CollectionTemplate from "./CollectionTemplate/CollectionTemplate";
+import HobbiesTemplate from "./HobbiesTemplate/HobbiesTemplate";
 import { ResumeContext } from "../../App";
 
 const Resume = () => {
@@ -17,7 +18,8 @@ const Resume = () => {
         Achievements: [],
         EducationHistory: [],
         Skills: [],
-        CourseWork: []
+        Hobbies: [],
+        CourseWork: [],
     };
 
     let {resumeState} = useContext(ResumeContext);
@@ -25,12 +27,14 @@ const Resume = () => {
     let component;
     for (let key in resume) {
         // Rendering the header if there is data available to process
-        if (key !== "Personal" && resume[key].length !== 0){
+        if ((key === "Hobbies" && resume["Hobbies"].length >= 1 && resume["Hobbies"][0] !== "") ||
+         (key !== "Personal" && resume[key].length !== 0) && key !== "Hobbies"){
             let header = key.replace(/([A-Z])/g, ' $1').replace(/^./, ((str) => {
                 return str.toUpperCase();
             }));
             resumeComponents[key].push(<HeaderTemplate key={header} header={header}/>)
         }
+
         for (let i=0; i < resume[key].length; i++){
             let data = resume[key][i];
             let isCollection = false;
@@ -51,6 +55,10 @@ const Resume = () => {
                     isCollection = !isCollection;
                     component = <CollectionTemplate key={i} items={resume[key]}/>
                     break;
+                case "Hobbies":
+                    isCollection = !isCollection;
+                    component = <HobbiesTemplate key={i} hobbies={resume[key]}/>
+                    break;
                 default:
                     break;            
             }
@@ -60,7 +68,7 @@ const Resume = () => {
             }
         }
     }
-    return ( 
+    return (
         <div id={styles.ResumeRender}>
             <PersonalTemplate fname={resume.Personal.fname} lname={resume.Personal.lname} email={resume.Personal.email} telephone={resume.Personal.telephone} website={resume.Personal.website} github={resume.Personal.github}/>
             <div className="d-flex pl-5 pr-5 pb-5">
@@ -75,7 +83,8 @@ const Resume = () => {
                 <EducationTemplate school={resume.EducationHistory.school} degree={resume.EducationHistory.degree} start_date={resume.EducationHistory.startDate} end_date={resume.EducationHistory.endDate} gpa={resume.EducationHistory.gpa}/>
                 </>
                 }
-                {resumeComponents.Achievements}     
+                {resumeComponents.Achievements}
+                {resumeComponents.Hobbies}
                 {resumeComponents.Skills}
                 {resumeComponents.CourseWork}
                 </div>

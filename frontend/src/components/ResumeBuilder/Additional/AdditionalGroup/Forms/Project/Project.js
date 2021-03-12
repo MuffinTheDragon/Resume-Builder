@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from "./Project.module.css";
-import { Row, Col, Accordion, Card } from "react-bootstrap";
+import { Row, Col, Accordion, Card, Modal, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ResumeContext } from "../../../../../../App";
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -44,54 +44,58 @@ const Project = ({id}) => {
         }
         return desc;
     }
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     return (
-        <>
-            <Accordion defaultActiveKey={"0"} className="m-3 mr-5 ml-5">
-                <Card>
-                    <Accordion.Toggle as={Card.Header} eventKey={"1"}>
-                        <h2>{project.title === "" ? "New Project" : project.title}</h2>
-                    </Accordion.Toggle>
-                    <Accordion.Collapse eventKey={"1"}>
-                        <Card.Body>
-                            <Row>
-                                <Col xs={12} md={12} lg={12} xl={6}>
-                                    <label htmlFor="projectName">Project Name</label><br></br>
-                                    <input type="text" id="projectName" name="projectName" onChange={(event) => handleChange(event, "title")} defaultValue={project.title}></input>
-                                </Col>
-                                <Col xs={12} md={12} lg={12} xl={6}>
-                                    <label htmlFor="role">Role</label><br></br>
-                                    <input type="text" id="role" name="role" onChange={(event) => handleChange(event, "subtitle")} defaultValue={project.subtitle}></input>
-                                </Col>
-                            </Row>
+        <Accordion defaultActiveKey={"0"} className="m-3 mr-5 ml-5">
+            <Card>
+                <Accordion.Toggle as={Card.Header} eventKey={"1"}>
+                    <h2>{project.title === "" ? "New Project" : project.title}</h2>
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey={"1"}>
+                    <Card.Body>
+                        <Row>
+                            <Col xs={12} md={12} lg={12} xl={6}>
+                                <label htmlFor="projectName">Project Name</label><br></br>
+                                <input type="text" id="projectName" name="projectName" onChange={(event) => handleChange(event, "title")} defaultValue={project.title}></input>
+                            </Col>
+                            <Col xs={12} md={12} lg={12} xl={6}>
+                                <label htmlFor="role">Role</label><br></br>
+                                <input type="text" id="role" name="role" onChange={(event) => handleChange(event, "subtitle")} defaultValue={project.subtitle}></input>
+                            </Col>
+                        </Row>
 
-                            <Row>
-                                <Col xs={12} md={12} lg={12} xl={6}>
-                                    <label htmlFor="startDate">Start Date</label><br></br>
-                                    <input type="month" id="startDate" name="startDate" onChange={(event) => handleChange(event, "startDate")} defaultValue={project.startDate}></input>
-                                </Col>
-                                <Col xs={12} md={12} lg={12} xl={6}>
-                                    <label htmlFor="endDate">End Date</label><br></br>
-                                    <input type="month" id="endDate" name="endDate" onChange={(event) => handleChange(event, "endDate")} defaultValue={project.endDate}></input>
-                                </Col>
-                            </Row>
+                        <Row>
+                            <Col xs={12} md={12} lg={12} xl={6}>
+                                <label htmlFor="startDate">Start Date</label><br></br>
+                                <input type="month" id="startDate" name="startDate" onChange={(event) => handleChange(event, "startDate")} defaultValue={project.startDate}></input>
+                            </Col>
+                            <Col xs={12} md={12} lg={12} xl={6}>
+                                <label htmlFor="endDate">End Date</label><br></br>
+                                <input type="month" id="endDate" name="endDate" onChange={(event) => handleChange(event, "endDate")} defaultValue={project.endDate}></input>
+                            </Col>
+                        </Row>
 
-                            <Row>
-                                <Col xs={12} md={12} lg={12} xl={12}>
-                                    <label htmlFor="description">Description</label><br></br>
-                                    <textarea id="description" className={"w-100 " + styles.description} name="description" onChange={(event) => handleChange(event, "desc")} defaultValue={getDesc(project.desc)}></textarea>
-                                </Col>
-                            </Row>
-                                
-                            <Row className="d-flex justify-content-end mt-4 mr-1">
-                                <button type="button"  className={styles.decline} onClick={(event) => deleteProject(event)} >
-                                    <FontAwesomeIcon icon={faTrashAlt}/>
-                                </button>
-                            </Row>
-                        </Card.Body>
-                    </Accordion.Collapse>
-                </Card>
-            </Accordion>
-        </>
+                        <Row>
+                            <Col xs={12} md={12} lg={12} xl={12}>
+                                <label htmlFor="description">Description</label><br></br>
+                                <textarea id="description" className={"w-100 " + styles.description} name="description" onChange={(event) => handleChange(event, "desc")} defaultValue={getDesc(project.desc)}></textarea>
+                            </Col>
+                        </Row>
+                            
+                        <Row className="d-flex justify-content-end mt-4 mr-1">
+                            <button type="button"  className={styles.decline} onClick={(event) => deleteProject(event)} >
+                                <FontAwesomeIcon icon={faTrashAlt}/>
+                            </button>
+                        </Row>
+                    </Card.Body>
+                </Accordion.Collapse>
+            </Card>
+        </Accordion>
     )
 };
 
