@@ -1,5 +1,5 @@
 # Sprint Planning Meeting
-February 18th, 2021
+March 2nd, 2021
 
 ## Attendance and Participation
 
