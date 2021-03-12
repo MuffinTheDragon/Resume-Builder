@@ -54,7 +54,8 @@ const Resume = () => {
                     component = <CollectionTemplate key={i} items={resume[key]}/>
                     break;
                 case "Hobbies":
-                    component = <HobbiesTemplate key={i} hobbies={data.hobbies}/>
+                    isCollection = !isCollection;
+                    component = <HobbiesTemplate key={i} hobbies={resume[key]}/>
                     break;
                 default:
                     break;            
@@ -65,7 +66,7 @@ const Resume = () => {
             }
         }
     }
-    return ( 
+    return (
         <div id={styles.ResumeRender}>
             <PersonalTemplate fname={resume.Personal.fname} lname={resume.Personal.lname} email={resume.Personal.email} telephone={resume.Personal.telephone} website={resume.Personal.website} github={resume.Personal.github}/>
             <div className="d-flex pl-5 pr-5 pb-5">
@@ -81,7 +82,7 @@ const Resume = () => {
                 </>
                 }
                 {resumeComponents.Achievements}
-                <HobbiesTemplate desc="Sleeping, Gaming" />
+                {resumeComponents.Hobbies}
                 {resumeComponents.Skills}
                 {resumeComponents.CourseWork}
                 </div>

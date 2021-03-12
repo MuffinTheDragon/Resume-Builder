@@ -8,21 +8,20 @@ import Project from "./AdditionalGroup/Forms/Project/Project";
 import Hobbies from "./AdditionalGroup/Forms/Hobbies/Hobbies";
 
 let Additional = () => {
+
     let {resumeState, setResume} = useContext(ResumeContext);
-    const projects = resumeState.Projects.map((project, _) => {
+    // Rendering cards
+    const projects = resumeState.Projects.map((project) => {
         if (project.title === "Hobbies") {
-            return <Hobbies key={project.id} id ={project.id}/>
+            return <Hobbies key={project.id} id={project.id}/>
         }
         return <Project key={project.id} id={project.id}/>;
     });
 
-    const hobbies = resumeState.Hobbies.map((project, _) => {
-        return <Hobbies key={hobbies.id} id ={hobbies.id}/> 
-    });
+    // const hobbies = resumeState.Hobbies.map((project, _) => {
+    //     return <Hobbies key={hobbies.id} id ={hobbies.id}/> 
+    // });
 
-    // let additionalSection = { 
-    //     Projects: []
-    // };
     
     let sections = [
         {icon: faBook, name: "Project"},
@@ -44,7 +43,7 @@ let Additional = () => {
     };
 
     let addProject = (type) => {
-        let newProj = {
+        let newProj = { //empty project
             id: Math.random(),
             title: "",
             subtitle: "",
@@ -78,6 +77,7 @@ let Additional = () => {
     return (
         <Row>
             <Col >
+                {/* <AdditionalGroup cards={sectionCards}/> */}
                 {projects}
                 <div className={"ml-5 mt-3 " + shared.itemButtonGroup}>
                     {additionalSectionsMenu}
