@@ -12,6 +12,7 @@ import ClubsTemplate from "./ClubsTemplate/ClubsTemplate";
 import HobbiesTemplate from "./HobbiesTemplate/HobbiesTemplate";
 import { ResumeContext } from "../../App";
 import Clubs from '../ResumeBuilder/Additional/AdditionalGroup/Forms/Clubs/Clubs';
+import HackathonTemplate from './HackathonTemplate/HackathonTemplate';
 
 const Resume = () => {
     const resumeComponents = {
@@ -22,6 +23,7 @@ const Resume = () => {
         Skills: [],
         Clubs: [],
         Hobbies: [],
+        Hackathon: [],
         CourseWork: [],
     };
 
@@ -64,6 +66,10 @@ const Resume = () => {
                     break;
                 case "Clubs":
                     component = <ClubsTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} desc={data.desc}/>
+                    break;
+                case "Hackathon":
+                    component = <HackathonTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} desc={data.desc}/>
+                    break;
                 default:
                     break;            
             }
@@ -81,6 +87,7 @@ const Resume = () => {
                     {resumeComponents.Experience}
                     {resumeComponents.Projects}
                     {resumeComponents.Clubs}
+                    {resumeComponents.Hackathon}
                 </div>
                 <div className={styles.w35}>
                 {resume["EducationHistory"].school === "" || Object.keys(resume["EducationHistory"]).length === 0 ? '' :
