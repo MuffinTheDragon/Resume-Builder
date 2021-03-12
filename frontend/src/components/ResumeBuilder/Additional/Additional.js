@@ -7,6 +7,7 @@ import { ResumeContext } from "../../../App";
 import Achievement from "./AdditionalGroup/Forms/Achievement/Achievement"
 import Project from "./AdditionalGroup/Forms/Project/Project";
 import Hobbies from "./AdditionalGroup/Forms/Hobbies/Hobbies";
+import Clubs from "./AdditionalGroup/Forms/Clubs/Clubs";
 
 let Additional = () => {
     let {resumeState, setResume} = useContext(ResumeContext);
@@ -61,13 +62,17 @@ let Additional = () => {
         return <Achievement key={achievement.id} id={achievement.id}/>;
     })
 
+    // const clubs = resumeState.Clubs.map((project, _) => {
+    //     return <Clubs key={clubs.id} id={clubs.id}/> 
+    // });
+
     // let additionalSection = { 
     //     Projects: []
     // };
     
     let sections = [
         {icon: faBook, name: "Project"},
-        {icon: faSeedling, name: "Club"},
+        {icon: faSeedling, name: "Clubs"},
         {icon: faCode, name: "Hackathon"},
         {icon: faAward, name: "Achievement"},
         {icon: faPalette, name: "Hobbies"},
@@ -119,6 +124,16 @@ let Additional = () => {
     //         desc: []
     //     }
     //     let updatedProjects = [...resumeState.Projects, newHobbies];
+    //     let updatedResumeState = {...resumeState, Projects: updatedProjects};
+    //     setResume(updatedResumeState);
+    // };
+    // let addClubs = (type) => {
+    //     let newClubs = { //empty project
+    //         id: Math.random(),
+    //         title: "Clubs",
+    //         desc: []
+    //     }
+    //     let updatedProjects = [...resumeState.Projects, newClubs];
     //     let updatedResumeState = {...resumeState, Projects: updatedProjects};
     //     setResume(updatedResumeState);
     // };

@@ -92,6 +92,12 @@ const App = () => {
         EducationHistory: {},
         Skills: [],
         CourseWork: [],
+        Hobbies: [],
+        Clubs: [{
+            id: 0,
+            title: "Cool Kids Club",
+            desc: "coolin' around"
+        }],
         Hobbies: ["Sleeping", "Gaming", "Cooking", "Skiing"]
     };
     const [resumeState, setResume] = useReducer(reducer, DummyResume);
