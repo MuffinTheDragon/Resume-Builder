@@ -1,4 +1,4 @@
-# Sprint2 Retrospective Meeting
+# Sprint3 Retrospective Meeting
 
 ## Attendance and Participation
 
@@ -25,21 +25,19 @@
 - Using Jira's Work log to document and compare predicted user story difficulty and time required to complete them
 - Adding photo previews of your work when creating the pull request
 - Group work sessions to maximize productivity
-- Allot 1-2 days at the end of the sprint to refactor all code
+- Splitting up Jira tasks into smaller tasks
 
 ## What are some new practices that you might want to use during next sprint
 
 - Add linter to code to standardize coding practices & formatting
-- Split up tasks on Jira in a more efficient and effective way
 
 ## What are (if any) harmful practices you should stop using during next sprint
 
 - Not giving ample amount of time for multiple group members to evaluate pull requests
 - Not giving ample amount of time to consolidate/refactor code from multiple group members' different tasks
-- Making tasks on Jira too large with too many subtasks
 
 ## What was your best/worst experience during sprint 2?
 
-**Best**: Team bonding over reading week! But also getting resume rendering to work where input fields update the resume preview :)
+**Best**: Team bonding and playing Super Seducer and learning that if they don't have a SteamID you shouldn't try and seduce them
 
-**Worst**: Dealing with how to split up Jira tasks and branches because the Jira tasks started out too large...
+**Worst**: Running low on time for the sprint because there were other assignments due
