@@ -1,13 +1,10 @@
 import React from "react";
 import styles from "./HobbiesTemplate.module.css";
 
-function HobbiesTemplate({desc}) {
+function HobbiesTemplate(props) {
+    const hobbies = props.hobbies.join(', ').trim();
     return (
-        <div>
-            <h1>Hobbies</h1>
-            <hr></hr>
-            <span className={styles.desc}>{desc}</span>
-        </div>
+        <span className={styles.desc}>{hobbies}</span>
     );
 }
 
