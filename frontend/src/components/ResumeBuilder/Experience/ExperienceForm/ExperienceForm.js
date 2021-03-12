@@ -45,7 +45,7 @@ const ExperienceForm = ({id}) => {
     }
 
     return (
-        <Accordion defaultActiveKey={"0"}>
+        <Accordion defaultActiveKey={"0"} className="m-3 mr-5 ml-5">
             <Card>
                 <Accordion.Toggle as={Card.Header} eventKey={"1"}>
                     <h2>{experience.title === "" ? "New Experience" : experience.title}</h2>

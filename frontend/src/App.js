@@ -5,6 +5,7 @@ import ResumeBuilder from "./components/ResumeBuilder/ResumeBuilder";
 import Resume from "./components/Resume/Resume";
 
 const reducer = (_, newState)  => {
+    console.log(newState);
     return {...newState};
 };
 export const ResumeContext = createContext();
@@ -36,24 +37,6 @@ const App = () => {
             endDate: "2020-12",
             location: "Toronto, ON",
             desc: ["Lorem Ipsum", "pancakes and waffles"]
-        },
-        {
-            id: 2,
-            title: "Professional Potato",
-            subtitle: "Home",
-            startDate: "2019-03",
-            endDate: "2020-01",
-            location: "Home",
-            desc: ["Potato", "Professional", "Yes"]
-        },
-        {
-            id: 3,
-            title: "Professional Waffle",
-            subtitle: "wafflehouse",
-            startDate: "2018-05",
-            endDate: "2019-02",
-            location: "Home",
-            desc: ["Potato", "Professional", "Yes"]
         }],
         Projects: [{
             id: 0,
@@ -69,14 +52,6 @@ const App = () => {
             subtitle: "WOOOOOOOOOOOO",
             startDate: "2019-03",
             endDate: "2021-03",
-            desc: ["COOOOOOOOOL", "doggohehe"]
-        },
-        {
-            id: 2,
-            title: "Another Cool Project",
-            subtitle: "WOOOOOOOOOOOO",
-            startDate: "2017-05",
-            endDate: "2018-02",
             desc: ["COOOOOOOOOL", "doggohehe"]
         }],
         Achievements: [{
@@ -96,9 +71,11 @@ const App = () => {
         Clubs: [{
             id: 0,
             title: "Cool Kids Club",
-            desc: "coolin' around"
+            startDate: "2018-05",
+            endDate: "2019-06",
+            desc: ["coolin' around"]
         }],
-        Hobbies: ["Sleeping", "Gaming", "Cooking", "Skiing"]
+        Hobbies: []
     };
     const [resumeState, setResume] = useReducer(reducer, DummyResume);
 
