@@ -1,9 +1,11 @@
 "use strict";
 
 // read the environment variable (will be 'production' in production mode)
+const cookieSession = require("cookie-session");
+const cookieParser = require("cookie-parser"); // parse cookie header
 
 const env = process.env.NODE_ENV
-
+const CLIENT_HOME_PAGE_URL = "http://localhost:3000";
 const express = require("express");
 // starting the express server
 const app = express();
@@ -25,6 +27,17 @@ const { ObjectID } = require('mongodb')
 const { Template, Experience, Project } = require("./models/resumeTemplate")
 
 
+app.use(
+    cookieSession({
+      name: "session",
+      keys: "this-is-cheddar-secret-sshh",
+      maxAge: 24 * 60 * 60 * 100
+    })
+  );
+
+// parse cookies
+app.use(cookieParser());
+
 
 // enable CORS if in development, for React local development server to connect to the web server.
 // if (env !== 'production') { app.use(cors()) }
@@ -37,14 +50,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-// Express Session for managing user sessions
-const session = require("express-session");
+// // Express Session for managing user sessions
+// const session = require("express-session");
 
-app.use(session({
-    secret: 'secret',
-    resave: true,
-    saveUninitialized: true
-}));
+// app.use(session({
+//     secret: 'secret',
+//     resave: true,
+//     saveUninitialized: true
+// }));
 
 
 
@@ -79,6 +92,16 @@ const mongoChecker = (req, res, next) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(
+    cors({
+      origin: "http://localhost:3000", // allow to server to accept request from different origin
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      credentials: true // allow session cookie from browser to pass through
+    })
+  );
+  
+
+
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 passport.serializeUser(function (user, done) {
@@ -109,31 +132,56 @@ passport.use(new GoogleStrategy({
 app.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 // Callback after Logging in
-app.get('/google/callback', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }),
-    (req, res) => {
-        // Successful authentication, redirect home.
-        // console.log("Reached here")
-        // res.send('It works!');
-    }
-);
+app.get('/google/callback', passport.authenticate('google', { successRedirect: CLIENT_HOME_PAGE_URL, failureRedirect: '/login/failed' }));
 
-app.get('/login', (req, res) => {
-    res.redirect('/google');
-})
+
+// when login is successful, retrieve user info
+app.get("/login/success", (req, res) => {
+    if (req.user) {
+      res.json({
+        success: true,
+        message: "user has successfully authenticated",
+        user: req.user,
+        cookies: req.cookies
+      });
+    }
+  });
+
+
+  // when login failed, send failed msg
+app.get("/login/failed", (req, res) => {
+    res.status(401).json({
+      success: false,
+      message: "user failed to authenticate."
+    });
+});
+
+
+
+
+// app.get('/login', (req, res) => {
+//     res.redirect('/google');
+// })
+
 
 // Logging out of the session
 app.get('/logout', (req, res) => {
     req.logout();
     res.send("User successfully logged out!")
-    // res.redirect('/');
-})
+    res.redirect(CLIENT_HOME_PAGE_URL);
+});
 
 // Middleware to protect and authenticate routes
 const verifyAuthenication = (req, res, next) => {
     if (req.isAuthenticated()) {
-        return next();
+        next();
     }
-    res.redirect('/google')
+    else{
+        res.status(401).json({
+            authenticated: false,
+            message: "user has not been authenticated"
+          });
+    }
 }
 
 /*
@@ -142,7 +190,12 @@ const verifyAuthenication = (req, res, next) => {
 
 // For testing, replace with actual homepage later.
 app.get('/', verifyAuthenication, (req, res) => {
-    res.send("Currently Logged In User: " + req.user.displayName)
+    res.status(200).json({
+        authenticated: true,
+        message: "user successfully authenticated",
+        user: req.user,
+        cookies: req.cookies
+      });
 })
 
 
