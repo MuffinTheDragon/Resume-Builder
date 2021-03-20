@@ -91,7 +91,37 @@ const App = () => {
     };
     const [resumeState, setResume] = useReducer(reducer, DummyResume);
 
+    // Pass these down via props in resume rendering so you can access 'user' which has id that you can use to call GET request from backend.
+    const [authenticated, setAuthenticated] = useState(false);
+    const [user, setUser] = useState({});
+    const [authError, setAuthError] = useState("");
 
+    useEffect(() => {
+
+        fetch("http://localhost:5000/login/success", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Credentials": true
+            }
+        }).then(response => {
+            if (response.status === 200) return response.json();
+            throw new Error("failed to authenticate user");
+        })
+        .then(responseJson => {
+            console.log(responseJson.user)
+
+            setAuthenticated(true);
+            setUser(responseJson.user);
+
+          })      
+          .catch(error => {
+            setAuthenticated(true);
+            setAuthError("Failed to authenticate user");
+          });
+    });
 
 
 
