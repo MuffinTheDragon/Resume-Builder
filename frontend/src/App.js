@@ -1,8 +1,10 @@
-import React, {useReducer, createContext} from "react";
+import React, {useReducer, createContext, useState, useEffect} from "react";
 import "./style.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ResumeBuilder from "./components/ResumeBuilder/ResumeBuilder";
 import Resume from "./components/Resume/Resume";
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import Login from "./components/Login/Login";
 
 const reducer = (_, newState)  => {
     console.log(newState);
@@ -11,6 +13,9 @@ const reducer = (_, newState)  => {
 export const ResumeContext = createContext();
 
 const App = () => {
+
+
+
     let DummyResume = {
         Personal: {
             fname: "John",
@@ -86,13 +91,27 @@ const App = () => {
     };
     const [resumeState, setResume] = useReducer(reducer, DummyResume);
 
+
+
+
+
     return (
-        <div className="d-flex w-100">
-            <ResumeContext.Provider value={{resumeState, setResume}}>
-                <ResumeBuilder/>
-                <Resume/>
-            </ResumeContext.Provider>
-        </div>
+        <BrowserRouter>
+            <Switch>
+                <Route path ='/login'>
+                    <Login />    
+                </Route>
+                <Route path = "/">
+                    <div className="d-flex w-100">
+                        <ResumeContext.Provider value={{resumeState, setResume}}>
+                            <ResumeBuilder/>
+                            <Resume/>
+                        </ResumeContext.Provider>
+                    </div>
+                </Route> 
+            </Switch>
+        </BrowserRouter>
+
     );
 }
 

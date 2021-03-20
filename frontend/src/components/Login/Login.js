@@ -32,7 +32,6 @@ const Login = (props) => {
             <div className="loginComp">
                 <div className="loginButton">
                     <GoogleButton onClick={() => window.open("http://localhost:5000/google", "_self")} />
-                    {/* <GoogleButton /> */}
                 </div>
             </div>
         )

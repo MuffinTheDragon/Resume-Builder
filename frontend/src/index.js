@@ -4,7 +4,7 @@ import App from './App';
 import Login from './components/Login/Login';
 
 ReactDOM.render(
-    <Login/>,
-    // <App/>,
+    // <Login/>,
+    <App/>,
     document.getElementById('root')
 );
