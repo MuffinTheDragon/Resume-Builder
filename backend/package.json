@@ -7,10 +7,8 @@
     "doc": "doc"
   },
   "scripts": {
-
-    "start": "node --experimental-modules server.js"
-
-
+    "start": "node --experimental-modules server.js",
+    "start:dev": "nodemon server.js"
   },
   "repository": {
     "type": "module",
@@ -24,18 +22,21 @@
   "homepage": "https://github.com/UTMCSC301/final-project-cheddar#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "connect-mongo": "^4.1.0",
+    "connect-mongo": "^4.2.0",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "csurf": "^1.11.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "firebase": "^8.2.9",
     "firebase-admin": "^9.5.0",
+    "mongoose": "^5.11.18",
     "passport": "^0.4.1",
     "passport-google-oauth": "^2.0.0",
     "passport-google-oauth20": "^2.0.0",
     "validator": "^13.5.2"
-    "connect-mongo": "^4.2.0",
-    "firebase": "^8.2.9",
-    "mongoose": "^5.11.18"
-
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

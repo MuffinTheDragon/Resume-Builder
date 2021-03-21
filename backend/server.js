@@ -1,8 +1,9 @@
 "use strict";
 
 // read the environment variable (will be 'production' in production mode)
-const cookieSession = require("cookie-session");
+// const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser"); // parse cookie header
+const csrf = require("csurf");
 
 const env = process.env.NODE_ENV
 const CLIENT_HOME_PAGE_URL = "http://localhost:3000";
@@ -12,7 +13,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 const path = require('path')
 
-const passport = require('passport');
+// const passport = require('passport');
 const bodyParser = require("body-parser");
 const cors = require('cors')
 
@@ -27,16 +28,6 @@ const { ObjectID } = require('mongodb')
 const { Template, Experience, Project } = require("./models/resumeTemplate")
 
 
-app.use(
-    cookieSession({
-      name: "session",
-      keys: "this-is-cheddar-secret-sshh",
-      maxAge: 24 * 60 * 60 * 100
-    })
-  );
-
-// parse cookies
-app.use(cookieParser());
 
 
 // enable CORS if in development, for React local development server to connect to the web server.
@@ -48,16 +39,9 @@ app.use(cookieParser());
 // body-parser: middleware for parsing HTTP JSON body into a usable object
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 
-// // Express Session for managing user sessions
-// const session = require("express-session");
-
-// app.use(session({
-//     secret: 'secret',
-//     resave: true,
-//     saveUninitialized: true
-// }));
 
 
 
@@ -85,12 +69,7 @@ const mongoChecker = (req, res, next) => {
 /* Following part handles authentication 
 
 =============== Backend for Authentication Starts =====================
-
 */
-
-// Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(
     cors({
@@ -99,104 +78,77 @@ app.use(
       credentials: true // allow session cookie from browser to pass through
     })
   );
+
+const admin = require("./firebase/index")
   
 
+// Middleware to protect and authenticate routes
+const verifyAuthentication = (req, res, next) => {
 
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+    const sessionCookie = req.cookies.session || '';
+    // Verify the session cookie. In this case an additional check is added to detect
+    // if the user's Firebase session was revoked, user deleted/disabled, etc.
+    admin
+        .auth()
+        .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+        .then((decodedClaims) => {
 
-passport.serializeUser(function (user, done) {
-    done(null, user);
-});
-
-passport.deserializeUser(function (user, done) {
-    done(null, user);
-});
-
-passport.use(new GoogleStrategy({
-    clientID: "698522005806-v4bt4q4fje7omd7qs6pj9n6v721bh6gt.apps.googleusercontent.com",
-    clientSecret: "PlQYJxHy2oR-wOdt8ENI1vbJ",
-    callbackURL: "http://localhost:5000/google/callback"
-},
-    function (token, tokenSecret, profile, done) {
-        User.findOrCreate(profile.id, profile.emails[0].value, profile.displayName).then((user) => {
-            console.log(user);
-            return done(null, user);
+            next();
         })
-    }
-));
+        .catch((error) => {
+        // Session cookie is unavailable or invalid. Force user to login.
+        res.redirect('/login');
+        });
+}
 
+// login end point
+app.post("/api/login", async (req, res) => {
+    const idToken = req.body.idToken;
+    const email = req.body.email;
+    const displayName = req.body.displayName;
+    const expiresIn = 60 * 60 * 1000* 24; // session cookie expires in 1 day
+    admin
+    .auth()
+    .verifyIdToken(idToken)
+    .then((decodedToken) => {
+        console.log("Successfully verified with G")
+        const uid = decodedToken.uid;
 
-// Auth Routes
+        User.findOrCreate(uid, email, displayName).then((user) => {
+            console.log(user);
+            admin
+            .auth()
+            .createSessionCookie(idToken, { expiresIn })
+            .then(
+                (sessionCookie) => {
+                    const options = { maxAge: expiresIn, httpOnly: true };
+                    res.cookie("session", sessionCookie, options);
+                    res.end("Success");
 
-// Login to google route
-app.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-// Callback after Logging in
-app.get('/google/callback', passport.authenticate('google', { successRedirect: CLIENT_HOME_PAGE_URL, failureRedirect: '/login/failed' }));
-
-
-// when login is successful, retrieve user info
-app.get("/login/success", (req, res) => {
-    if (req.user) {
-      res.json({
-        success: true,
-        message: "user has successfully authenticated",
-        user: req.user,
-        cookies: req.cookies
-      });
-    }
-  });
-
-
-  // when login failed, send failed msg
-app.get("/login/failed", (req, res) => {
-    res.status(401).json({
-      success: false,
-      message: "user failed to authenticate."
+                    
+                },
+                (error) => {
+                    res.status(401).send("Unauthorized");
+                }
+            );
+        })
+    })
+    .catch((error) => {
+        // Handle error
+        res.status(401).send("Unauthorized");
     });
 });
 
 
+  // logout endpoint
+app.get("/api/logout", (req, res) => {
+    res.clearCookie("session");
+    res.redirect('/login');
+  });
+  
 
+// =============== Backend for Authentication Ends =====================
 
-// app.get('/login', (req, res) => {
-//     res.redirect('/google');
-// })
-
-
-// Logging out of the session
-app.get('/logout', (req, res) => {
-    req.logout();
-    res.send("User successfully logged out!")
-    res.redirect(CLIENT_HOME_PAGE_URL);
-});
-
-// Middleware to protect and authenticate routes
-const verifyAuthenication = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        next();
-    }
-    else{
-        res.status(401).json({
-            authenticated: false,
-            message: "user has not been authenticated"
-          });
-    }
-}
-
-/*
-=============== Backend for Authentication Ends =====================
-*/
-
-// For testing, replace with actual homepage later.
-app.get('/', verifyAuthenication, (req, res) => {
-    res.status(200).json({
-        authenticated: true,
-        message: "user successfully authenticated",
-        user: req.user,
-        cookies: req.cookies
-      });
-})
 
 
 
@@ -206,7 +158,7 @@ app.get('/', verifyAuthenication, (req, res) => {
 
 
 // POST 
-app.post('/Template', async (req, res) => {
+app.post('/Template',  async (req, res) => {
 
     if (!req.user) {
         res.status(401).send()
