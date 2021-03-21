@@ -184,6 +184,46 @@ app.post('/Template', async (req, res) => {
     }
 })
 
+// GET all the templates for the user 
+app.get('/Template/getAll/:user_id', async (req, res) => {
+
+    const user_id = req.params.user_id;
+
+    if (!req.user) {
+        res.status(401).send()
+        return;
+    }
+
+    // check mongoose connection established.
+    if (mongoose.connection.readyState != 1) {
+        log('Issue with mongoose connection')
+        res.status(500).send('Internal server error')
+        return;
+    }
+
+    if (!ObjectID(user_id)) {
+        res.status(404).send()
+        return;
+    }
+
+    try {
+        const template = await Template.find({ userid: req.user }); 
+        
+        if (!template) {
+            res.status(404).send()
+        } 
+
+        res.status(200).send(template); 
+    } catch (error) {
+        console.log(error); 
+        if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
+            res.status(500).send('Internal server error')
+        } else {
+            res.status(400).send('Bad Request') // 400 for bad request gets sent to client.
+        }
+    }
+
+})
 
 // GET the templates 
 app.get('/Template/:template_id', async (req, res) => {
@@ -252,7 +292,7 @@ app.patch("/Template/:template_id", async (req, res) => {
 
     const template = await Template.findOne({ _id: _template_id, userid: req.user })
     if (!template) {
-        res.status(404).send()
+        res.status(401).send()
         return;
     }
     
@@ -310,7 +350,7 @@ app.delete('/Template/:template_id', async (req, res) => {
 
     const template = await Template.findOne({ _id: _template_id, userid: req.user })
     if (!template) {
-        res.status(404).send()
+        res.status(401).send()
         return;
     }
 
@@ -340,6 +380,11 @@ app.delete('/Template/:template_id', async (req, res) => {
 /*
 =============== Helper Functions =====================
 */
+
+function isMongoError(error) { // checks for first error returned by promise rejection if Mongo database suddently disconnects
+	return typeof error === 'object' && error !== null && error.name === "MongoNetworkError"
+}
+
 
 // creates the template model and populates it with the request body data
 async function makeTemplate(req) {
