@@ -1,37 +1,70 @@
-import React from 'react';
-// import { useHistory } from "react-router-dom";
+import React, {useContext} from 'react';
+import { useHistory } from "react-router-dom";
 import "./Login.css";
+import {auth, firebase} from "../../firebase";
+import {UserIDContext} from "../../App";
 
 import GoogleButton from 'react-google-button';
 const Login = (props) => {
-    
-    // const history = useHistory();
-    
-    // const signInWithGoogle = () => {
+    const {_, setUserID} = useContext(UserIDContext);
+
+    async function sendLoginRequest(idToken, email, displayName) {
+
+        const responseJSON = {
+            "idToken": idToken,
+            "email": email,
+            "displayName": displayName
+        }
+        const request = new Request("/api/login", {
+            method: "post",
+            body: JSON.stringify(responseJSON),
+            headers: {
+                Accept: "application/json, text/plain, */*",
+                "Content-Type": "application/json"
+            }
+        })
+        const response = await fetch(request);
+        console.log(response)
+        if (response.status === 401) {
+          throw new Error("auth failed")
+        }
         
+    }
+
+    const history = useHistory();
 
 
-    //     const request = new Request(`/google`, {
-    //         method: "get",
-    //     });
-    //     fetch(request)
-    //         .then(res => {
-    //             if (res.status === 200){
-    //             // register successful
-    //             // decide what to do after user clicks register
-    //                 console.log("User logged in!")
-    //                 window.location.href = '/'
-    //             }
-    //         })
-    //         .catch(error => {
-    //             console.log(error);
-    //         })        
-    // }
+    async function googleLogin() {
+      //1 - init Google Auth Provider
+      const provider = new firebase.auth.GoogleAuthProvider();
+      //2 - create the popup signIn
+      await auth.signInWithPopup(provider).then(
+        async (result) => {
+            const idToken = await firebase.auth().currentUser.getIdToken()
+            console.log({idToken})
+            setUserID(result.user.uid);
+            console.log(result.user)
+            console.log(result.user.email, result.user.displayName)
+
+            try {
+              await sendLoginRequest(idToken, result.user.email, result.user.displayName);
+              history.push("/resume")
+            } catch (error) {
+              alert("Login failed")
+              console.error({message: "Login failed", error})
+            }
+            // redirect to jadlsfjldsfj page
+        },
+        function (error) {
+          console.error(error);
+        }
+      );
+    }
 
         return (
             <div className="loginComp">
                 <div className="loginButton">
-                    <GoogleButton onClick={() => window.open("http://localhost:5000/google", "_self")} />
+                    <GoogleButton onClick={googleLogin} />
                 </div>
             </div>
         )

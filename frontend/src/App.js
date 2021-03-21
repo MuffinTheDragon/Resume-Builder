@@ -11,11 +11,9 @@ const reducer = (_, newState)  => {
     return {...newState};
 };
 export const ResumeContext = createContext();
+export const UserIDContext = createContext(); // Not sure if this is needed here 
 
 const App = () => {
-
-
-
     let DummyResume = {
         Personal: {
             fname: "John",
@@ -89,55 +87,31 @@ const App = () => {
             desc: ["Real time chat", "Video chat with others"]
         }],
     };
+
+    let areducer = (_, userID) => {
+        console.log(userID);
+    };
+
     const [resumeState, setResume] = useReducer(reducer, DummyResume);
-
-    // Pass these down via props in resume rendering so you can access 'user' which has id that you can use to call GET request from backend.
-    const [authenticated, setAuthenticated] = useState(false);
-    const [user, setUser] = useState({});
-    const [authError, setAuthError] = useState("");
-
-    useEffect(() => {
-
-        fetch("http://localhost:5000/login/success", {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Credentials": true
-            }
-        }).then(response => {
-            if (response.status === 200) return response.json();
-            throw new Error("failed to authenticate user");
-        })
-        .then(responseJson => {
-            console.log(responseJson.user)
-
-            setAuthenticated(true);
-            setUser(responseJson.user);
-
-          })      
-          .catch(error => {
-            setAuthenticated(true);
-            setAuthError("Failed to authenticate user");
-          });
-    });
-
-
+    const [userID, setUserID] = useReducer(areducer, "");
 
     return (
         <BrowserRouter>
             <Switch>
                 <Route path ='/login'>
-                    <Login />    
+                    <UserIDContext.Provider value={{userID, setUserID}}>
+                        <Login />
+                    </UserIDContext.Provider>
                 </Route>
-                <Route path = "/">
+                <Route path = "/resume">
                     <div className="d-flex w-100">
                         <ResumeContext.Provider value={{resumeState, setResume}}>
                             <ResumeBuilder/>
                             <Resume/>
                         </ResumeContext.Provider>
                     </div>
+                </Route> 
+                <Route path = '/'>
                 </Route> 
             </Switch>
         </BrowserRouter>
