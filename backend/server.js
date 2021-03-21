@@ -1,16 +1,19 @@
 "use strict";
 
 // read the environment variable (will be 'production' in production mode)
+// const cookieSession = require("cookie-session");
+const cookieParser = require("cookie-parser"); // parse cookie header
+const csrf = require("csurf");
 
 const env = process.env.NODE_ENV
-
+const CLIENT_HOME_PAGE_URL = "http://localhost:3000";
 const express = require("express");
 // starting the express server
 const app = express();
 const port = process.env.PORT || 5000;
 const path = require('path')
 
-const passport = require('passport');
+// const passport = require('passport');
 const bodyParser = require("body-parser");
 const cors = require('cors')
 
@@ -26,6 +29,7 @@ const { Template, Experience, Project } = require("./models/resumeTemplate")
 
 
 
+
 // enable CORS if in development, for React local development server to connect to the web server.
 // if (env !== 'production') { app.use(cors()) }
 
@@ -35,16 +39,9 @@ const { Template, Experience, Project } = require("./models/resumeTemplate")
 // body-parser: middleware for parsing HTTP JSON body into a usable object
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 
-// Express Session for managing user sessions
-const session = require("express-session");
-
-app.use(session({
-    secret: 'secret',
-    resave: true,
-    saveUninitialized: true
-}));
 
 
 
@@ -72,78 +69,86 @@ const mongoChecker = (req, res, next) => {
 /* Following part handles authentication 
 
 =============== Backend for Authentication Starts =====================
-
 */
 
-// Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(
+    cors({
+      origin: "http://localhost:3000", // allow to server to accept request from different origin
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      credentials: true // allow session cookie from browser to pass through
+    })
+  );
 
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-
-passport.serializeUser(function (user, done) {
-    done(null, user);
-});
-
-passport.deserializeUser(function (user, done) {
-    done(null, user);
-});
-
-passport.use(new GoogleStrategy({
-    clientID: "698522005806-v4bt4q4fje7omd7qs6pj9n6v721bh6gt.apps.googleusercontent.com",
-    clientSecret: "PlQYJxHy2oR-wOdt8ENI1vbJ",
-    callbackURL: "http://localhost:5000/google/callback"
-},
-    function (token, tokenSecret, profile, done) {
-        User.findOrCreate(profile.id, profile.emails[0].value, profile.displayName).then((user) => {
-            console.log(user);
-            return done(null, user);
-        })
-    }
-));
-
-
-// Auth Routes
-
-// Login to google route
-app.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-// Callback after Logging in
-app.get('/google/callback', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }),
-    (req, res) => {
-        // Successful authentication, redirect home.
-        // console.log("Reached here")
-        // res.send('It works!');
-    }
-);
-
-app.get('/login', (req, res) => {
-    res.redirect('/google');
-})
-
-// Logging out of the session
-app.get('/logout', (req, res) => {
-    req.logout();
-    res.send("User successfully logged out!")
-    // res.redirect('/');
-})
+const admin = require("./firebase/index")
+  
 
 // Middleware to protect and authenticate routes
-const verifyAuthenication = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/google')
+const verifyAuthentication = (req, res, next) => {
+
+    const sessionCookie = req.cookies.session || '';
+    // Verify the session cookie. In this case an additional check is added to detect
+    // if the user's Firebase session was revoked, user deleted/disabled, etc.
+    admin
+        .auth()
+        .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+        .then((decodedClaims) => {
+
+            next();
+        })
+        .catch((error) => {
+        // Session cookie is unavailable or invalid. Force user to login.
+        res.redirect('/login');
+        });
 }
 
-/*
-=============== Backend for Authentication Ends =====================
-*/
+// login end point
+app.post("/api/login", async (req, res) => {
+    const idToken = req.body.idToken;
+    const email = req.body.email;
+    const displayName = req.body.displayName;
+    const expiresIn = 60 * 60 * 1000* 24; // session cookie expires in 1 day
+    admin
+    .auth()
+    .verifyIdToken(idToken)
+    .then((decodedToken) => {
+        console.log("Successfully verified with G")
+        const uid = decodedToken.uid;
 
-// For testing, replace with actual homepage later.
-app.get('/', verifyAuthenication, (req, res) => {
-    res.send("Currently Logged In User: " + req.user.displayName)
-})
+        User.findOrCreate(uid, email, displayName).then((user) => {
+            console.log(user);
+            admin
+            .auth()
+            .createSessionCookie(idToken, { expiresIn })
+            .then(
+                (sessionCookie) => {
+                    const options = { maxAge: expiresIn, httpOnly: true };
+                    res.cookie("session", sessionCookie, options);
+                    res.end("Success");
+
+                    
+                },
+                (error) => {
+                    res.status(401).send("Unauthorized");
+                }
+            );
+        })
+    })
+    .catch((error) => {
+        // Handle error
+        res.status(401).send("Unauthorized");
+    });
+});
+
+
+  // logout endpoint
+app.get("/api/logout", (req, res) => {
+    res.clearCookie("session");
+    res.redirect('/login');
+  });
+  
+
+// =============== Backend for Authentication Ends =====================
+
 
 
 
@@ -153,7 +158,7 @@ app.get('/', verifyAuthenication, (req, res) => {
 
 
 // POST 
-app.post('/Template', async (req, res) => {
+app.post('/Template',  async (req, res) => {
 
     if (!req.user) {
         res.status(401).send()

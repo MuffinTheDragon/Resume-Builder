@@ -1,14 +1,17 @@
-import React, {useReducer, createContext} from "react";
+import React, {useReducer, createContext, useState, useEffect} from "react";
 import "./style.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ResumeBuilder from "./components/ResumeBuilder/ResumeBuilder";
 import Resume from "./components/Resume/Resume";
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import Login from "./components/Login/Login";
 
 const reducer = (_, newState)  => {
     console.log(newState);
     return {...newState};
 };
 export const ResumeContext = createContext();
+export const UserIDContext = createContext(); // Not sure if this is needed here 
 
 const App = () => {
     let DummyResume = {
@@ -84,15 +87,35 @@ const App = () => {
             desc: ["Real time chat", "Video chat with others"]
         }],
     };
+
+    let areducer = (_, userID) => {
+        console.log(userID);
+    };
+
     const [resumeState, setResume] = useReducer(reducer, DummyResume);
+    const [userID, setUserID] = useReducer(areducer, "");
 
     return (
-        <div className="d-flex w-100">
-            <ResumeContext.Provider value={{resumeState, setResume}}>
-                <ResumeBuilder/>
-                <Resume/>
-            </ResumeContext.Provider>
-        </div>
+        <BrowserRouter>
+            <Switch>
+                <Route path ='/login'>
+                    <UserIDContext.Provider value={{userID, setUserID}}>
+                        <Login />
+                    </UserIDContext.Provider>
+                </Route>
+                <Route path = "/resume">
+                    <div className="d-flex w-100">
+                        <ResumeContext.Provider value={{resumeState, setResume}}>
+                            <ResumeBuilder/>
+                            <Resume/>
+                        </ResumeContext.Provider>
+                    </div>
+                </Route> 
+                <Route path = '/'>
+                </Route> 
+            </Switch>
+        </BrowserRouter>
+
     );
 }
 
