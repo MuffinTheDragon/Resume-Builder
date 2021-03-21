@@ -25,7 +25,7 @@ mongoose.set('useFindAndModify', false);
 const { User } = require("./models/user");
 const { ObjectID } = require('mongodb')
 
-const { Template, Experience, Project } = require("./models/resumeTemplate")
+const { Template, Experience, Project, Achievement, Clubs, Hackathons } = require("./models/resumeTemplate")
 
 
 
@@ -274,9 +274,9 @@ app.get('/Template/:template_id', async (req, res) => {
 
 
 // UPDATE 
-app.patch("/Template/:template_id", async (req, res) => {
+app.put("/Template/:template_id", async (req, res) => {
 
-    const _template_id = req.params.template_id
+    const _template_id = req.params.template_id;
 
     if (!req.user) {
         res.status(401).send()
@@ -291,7 +291,7 @@ app.patch("/Template/:template_id", async (req, res) => {
     }
 
     if (!ObjectID(_template_id)) {
-        res.status(404).send()
+        res.status(401).send()
         return;
     }
 
@@ -300,26 +300,11 @@ app.patch("/Template/:template_id", async (req, res) => {
         res.status(401).send()
         return;
     }
-    
+
+    let updated = await updateTemplate(req, template);
 
     try {
-        Template.updateOne({ _id: _template_id }, req.body).then(doc => {
-            if (!doc) {
-                return res.status(404).send()
-            }
-        })
-        const query = Template.where({ _id: _template_id });
-        query.findOne(function (err, temps) {
-            if (err) return handleError(err);
-
-            createSubSchema(req).then(result => {
-                Template.updateOne({ _id: _template_id }, { "experiences": [...temps.experiences, ...result[0]], "projects": [...temps.projects, ...result[1]] }).then(doc => {
-                    if (!doc) {
-                        return res.status(404).send()
-                    }
-                })
-            })
-        });
+        const final = await updated.save()
         res.status(200).send("Updated")
 
     } catch (error) {
@@ -398,35 +383,29 @@ async function makeTemplate(req) {
 
         const template = new Template({
             userid: req.user,
-            personal: {
-                name: req.body.name,
-                email: req.body.email,
-                phone: req.body.phone,
-                personal_website: req.body.personal_website
+            Personal: {
+                fname: req.body.Personal.fname,
+                lname: req.body.Personal.lname,
+                email: req.body.Personal.email,
+                telephone: req.body.Personal.telephone,
+                website: req.body.Personal.website,
+                github: req.body.Personal.github
             },
-            location: {
-                city: req.body.lcity,
-                countryCode: req.body.countryCode,
-                region: req.body.region
+            Experiences: result[0],
+            Projects: result[1],
+            Achievements: result[2],
+            EducationHistory: {
+                school: req.body.EducationHistory.school,
+                degree: req.body.EducationHistory.degree,
+                startDate: req.body.EducationHistory.startDate,
+                endDate: req.body.EducationHistory.endDate,
+                gpa: req.body.EducationHistory.gpa,
             },
-            profile: {
-                platform: req.body.platform,
-                username: req.body.username,
-                url: req.body.url
-            },
-            education: {
-                city: req.body.ecity,
-                degree: req.body.degree,
-                gpa: req.body.gpa,
-                graduation_date: req.body.graduation_date,
-                school: req.body.school,
-                start_date: req.body.start_date
-            },
-            courses: req.body.courses,
-            experiences: result[0],
-            projects: result[1],
-            skills: req.body.skills,
-            hobbies: req.body.hobbies,
+            Skills: req.body.Skills,
+            coursework: req.body.CourseWork,
+            clubs: result[3],
+            hobbies: req.body.Hobbies,
+            hackathons: result[4]
         })
         return template
     }).catch((error) => {
@@ -436,46 +415,133 @@ async function makeTemplate(req) {
     return final
 }
 
+async function updateTemplate(req, template) {
 
-// creates the experience and project model and populates it with the request body data
+    const final = createSubSchema(req).then(result => {
+
+        template.Personal.fname=req.body.Personal.fname;
+        template.Personal.lname=req.body.Personal.lname;
+        template.Personal.email=req.body.Personal.email;
+        template.Personal.telephone=req.body.Personal.telephone;
+        template.Personal.website=req.body.Personal.website;
+        template.Personal.github=req.body.Personal.github;
+        template.Experience=result[0];
+        template.Projects=result[1];
+        template.Achievement=result[2];
+        template.EducationHistory.school=req.body.EducationHistory.school;
+        template.EducationHistory.degree=req.body.EducationHistory.degree;
+        template.EducationHistory.startDate=req.body.EducationHistory.startDate;
+        template.EducationHistory.endDate=req.body.EducationHistory.endDate;
+        template.EducationHistory.gpa=req.body.EducationHistory.gpa;
+        template.Skills=req.body.Skills;
+        template.CourseWork=req.body.CourseWork;
+        template.Clubs=result[3];
+        template.Hobbies=req.body.Hobbies;
+        template.Hackathons=result[4];
+
+        return template
+    }).catch((error) => {
+        console.error(error);
+    })
+
+    return final
+}
+
+
+// creates the sub schema model and populates it with the request body data
 async function createSubSchema(req) {
 
     let experience_num = 0
     let project_num = 0
+    let achievement_num = 0
+    let clubs_num = 0
+    let hackathons_num = 0
 
-    if (req.body.experiences) {
-        experience_num = req.body.experiences.length
+    if (req.body.Experiences) {
+        experience_num = req.body.Experiences.length
     }
 
-    if (req.body.projects) {
-        project_num = req.body.projects.length
+    if (req.body.Projects) {
+        project_num = req.body.Projects.length
+    }
+    
+    if (req.body.Achievement) {
+        achievement_num = req.body.Achievement.length
+    }
+
+    if (req.body.Clubs) {
+        clubs_num = req.body.Clubs.length
+    }
+
+    if (req.body.Hackathons) {
+        hackathons_num = req.body.Hackathons.length
     }
 
     let experience_array = []
     let project_array = []
+    let achievement_array = []
+    let clubs_array = []
+    let hackathons_array = []
 
     for (let i = 0; i < experience_num; i++) {
         let experience = new Experience({
-            date: req.body.experiences[i].date,
-            description: req.body.experiences[i].description,
-            company_name: req.body.experiences[i].company_name,
-            position: req.body.experiences[i].position
+            id: req.body.Experience[i].id,
+            title: req.body.Experiences[i].title,
+            subtitle: req.body.Experiences[i].subtitle,
+            startDate: req.body.Experiences[i].startDate,
+            endDate: req.body.Experiences[i].endDate,
+            location: req.body.Experiences[i].location,
+            desc: req.body.Experiences[i].desc,
         })
         experience_array.push(experience)
     }
 
     for (let j = 0; j < project_num; j++) {
         let project = new Project({
-            project_name: req.body.projects[j].project_name,
-            description: req.body.projects[j].description,
-            start_date: req.body.projects[j].start_date,
-            end_date: req.body.projects[j].end_date
+            id: req.body.Projects[j].id,
+            title: req.body.Projects[j].title,
+            subtitle: req.body.Projects[j].subtitle,
+            startDate: req.body.Projects[j].startDate,
+            endDate: req.body.Projects[j].endDate,
+            desc: req.body.Projects[j].desc,
         })
         project_array.push(project)
     }
 
+    for (let k = 0; k < achievement_num; k++) {
+        let achievement = new Achievement({
+            id: req.body.Achievement[k].id,
+            title: req.body.Achievement[k].title,
+            desc: req.body.Achievement[k].desc,
+        })
+        achievement_array.push(achievement)
+    }
 
-    return [experience_array, project_array]
+    for (let l = 0; l < clubs_num; l++) {
+        let clubs = new Clubs({
+            id: req.body.Clubs[l].id,
+            title: req.body.Clubs[l].title,
+            startDate: req.body.Clubs[l].startDate,
+            endDate: req.body.Clubs[l].endDate,
+            desc: req.body.Clubs[l].desc,
+        })
+        clubs_array.push(clubs)
+    }
+
+    for (let m = 0; m < hackathons_num; m++) {
+        let hackathons = new Hackathons({
+            id: req.body.Hackathons[m].id,
+            title: req.body.Hackathons[m].title,
+            subtitle: req.body.Hackathons[m].subtitle,
+            startDate: req.body.Hackathons[m].startDate,
+            endDate: req.body.Hackathons[m].endDate,
+            desc: req.body.Hackathons[m].desc,
+        })
+        hackathons_array.push(hackathons)
+    }
+
+
+    return [experience_array, project_array, achievement_array, clubs_array, hackathons_array]
 }
 
 
