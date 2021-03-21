@@ -5,46 +5,152 @@ const mongoose = require('mongoose')
 
 // Creating the experience template through mongoose schema
 const ExperienceSchema = new mongoose.Schema({
-    date: {
-        type: Date,
-        required: false
+    id: {
+        type: Number,
+        required: false,
+        trim: false
     },
-    description: {
+    title: {
         type: String,
         required: false,
         trim: false
     },
-    company_name: {
+    subtitle: {
         type: String,
         required: false,
-        trim: true
+        trim: false
     },
-    position: {
+    startDate: {
         type: String,
         required: false,
-        trim: true
+        trim: false
+    },
+    endDate: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    location: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    desc: {
+        type: [String],
+        required: false
     }
 })
 
 // Creating the project template through mongoose schema
 const ProjectSchema = new mongoose.Schema({
-    project_name: {
-        type: String,
+    id: {
+        type: Number,
         required: false,
-        trim: true
+        trim: false
     },
-    description: {
+    title: {
         type: String,
         required: false,
         trim: false
     },
-    start_date: {
-        type: Date,
-        required: false
+    subtitle: {
+        type: String,
+        required: false,
+        trim: false
     },
-    end_date: {
-        type: Date,
+    startDate: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    endDate: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    desc: {
+        type: [String],
         required: false
+    }
+})
+
+// Creating the achievement template through mongoose schema
+const AchievementSchema = new mongoose.Schema({
+    id: {
+        type: Number,
+        required: false,
+        trim: false
+    },
+    title: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    desc: {
+        type: String,
+        required: false,
+        trim: false
+    }
+})
+
+// Creating the achievement template through mongoose schema
+const ClubsSchema = new mongoose.Schema({
+    id: {
+        type: Number,
+        required: false,
+        trim: false
+    },
+    title: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    startDate: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    endDate: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    desc: {
+        type: [String],
+        required: false,
+    }
+})
+
+// Creating the achievement template through mongoose schema
+const HackathonsSchema = new mongoose.Schema({
+    id: {
+        type: Number,
+        required: false,
+        trim: false
+    },
+    title: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    subtitle: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    startDate: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    endDate: {
+        type: String,
+        required: false,
+        trim: false
+    },
+    desc: {
+        type: [String],
+        required: false,
     }
 })
 
@@ -52,113 +158,95 @@ const ProjectSchema = new mongoose.Schema({
 const TemplateSchema = new mongoose.Schema({
     userid: {
         type: Object,
-        required: true,
+        required: false,
         trim: true
     },
-    personal: {
-        name: {
+    Personal: {
+        fname: {
             type: String,
-            required: true,
+            required: false,
+            trim: true
+        },
+        lname: {
+            type: String,
+            required: false,
             trim: true
         },
         email: {
             type: String,
-            required: true,
+            required: false,
             trim: true
         },
-        phone: {
+        telephone: {
             type: String,
-            required: true,
+            required: false,
             trim: true
         },
-        personal_website: {
+        website: {
+            type: String,
+            required: false,
+            trim: true
+        },
+        github: {
             type: String,
             required: false,
             trim: true
         },
     },
-    location: {
-        city: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        countryCode: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        region: {
-            type: String,
-            required: true,
-            trim: true
-        }
-    },
-    profile: {
-        platform: {
-            type: String,
-            required: false,
-            trim: true
-        },
-        username: {
-            type: String,
-            required: false,
-            trim: true
-        },
-        url: {
-            type: String,
-            required: false,
-            trim: true
-        },
+    Experiences: {
+        type: [ExperienceSchema],
         required: false
     },
-    education: {
-        city: {
+    Projects: {
+        type: [ProjectSchema],
+        required: false
+    },
+    Achievements: {
+        type: [AchievementSchema],
+        required: false
+    },
+    EducationHistory: {
+        school: {
             type: String,
-            required: true,
+            required: false,
             trim: true
         },
         degree: {
             type: String,
-            required: true,
-            trim: true
-        },
-        gpa: {
-            type: Number,
-            required: false
-        },
-        graduation_date: {
-            type: Date,
-            required: true
-        },
-        school: {
-            type: String,
-            required: true,
+            required: false,
             trim: true
         },
         start_date: {
             type: Date,
-            required: true
+            required: false
         },
+        end_date: {
+            type: Date,
+            required: false
+        },
+        gpa: {
+            type: Number,
+            required: false
+        }
     },
-    courses: {
+    Skills: {
         type: [String],
         required: false
     },
-    experiences: {
-        type: [ExperienceSchema],
-        required: true
-    },
-    projects: {
-        type: [ProjectSchema],
-        required: true
-    },
-    skills: {
+    CourseWork: {
         type: [String],
         required: false
     },
-    hobbies: {
+    Clubs: {
+        type: [ClubsSchema],
+        required: false
+    },
+    Hobbies: {
         type: [String],
+        required: false
+    }, 
+    Hackathons: {
+        type: [HackathonsSchema],
         required: false
     }
 })
@@ -167,5 +255,8 @@ const TemplateSchema = new mongoose.Schema({
 const Template = mongoose.model('Template', TemplateSchema)
 const Experience = mongoose.model('Experience', ExperienceSchema)
 const Project = mongoose.model('Project', ProjectSchema)
+const Achievement = mongoose.model('Achievement', AchievementSchema)
+const Clubs = mongoose.model('Clubs', ClubsSchema)
+const Hackathons = mongoose.model('Hackathons', HackathonsSchema)
 
-module.exports = { Template, Experience, Project }
+module.exports = { Template, Experience, Project, Achievement, Clubs, Hackathons }
