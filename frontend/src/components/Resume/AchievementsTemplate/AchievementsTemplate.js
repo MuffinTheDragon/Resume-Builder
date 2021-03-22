@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import TemplateStyles from "../TemplateStyles.module.css";
 import styles from "./AchievementsTemplate.module.css";
 import { faTrophy } from "@fortawesome/free-solid-svg-icons";
@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AddToLibrary } from "../Resume";
 
 function AchievementsTemplate({title, desc}) {
-    // useContext(AddToLibrary(faTrophy));
     AddToLibrary(faTrophy);
     return (
         <div className="m-2">
