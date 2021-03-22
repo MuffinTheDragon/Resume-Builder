@@ -18,10 +18,8 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 
 
 const ref = React.createRef();
-console.log("HELLO?");
 
 export function AddToLibrary(icon) {
-    console.log(icon);
     library.add(icon);
 }
 
