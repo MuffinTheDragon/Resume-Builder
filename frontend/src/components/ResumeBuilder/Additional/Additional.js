@@ -82,7 +82,6 @@ let Additional = () => {
                 updatedResumeState = {...resumeState, Projects: updatedProjects};
                 setResume(updatedResumeState);
                 break;
-            
             case "Achievements":
                 let newAch = {
                     id: Math.random(),

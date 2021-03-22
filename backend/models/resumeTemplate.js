@@ -157,7 +157,7 @@ const HackathonsSchema = new mongoose.Schema({
 // Creating the resume template through mongoose schema
 const TemplateSchema = new mongoose.Schema({
     userid: {
-        type: Object,
+        type: String,
         required: false,
         trim: true
     },

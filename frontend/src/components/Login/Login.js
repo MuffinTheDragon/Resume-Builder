@@ -22,9 +22,8 @@ const Login = (props) => {
                 Accept: "application/json, text/plain, */*",
                 "Content-Type": "application/json"
             }
-        })
+        });
         const response = await fetch(request);
-        console.log(response)
         if (response.status === 401) {
           throw new Error("auth failed")
         }
@@ -48,12 +47,11 @@ const Login = (props) => {
 
             try {
               await sendLoginRequest(idToken, result.user.email, result.user.displayName);
-              history.push("/resume")
+              history.push("/select")
             } catch (error) {
               alert("Login failed")
               console.error({message: "Login failed", error})
             }
-            // redirect to jadlsfjldsfj page
         },
         function (error) {
           console.error(error);

@@ -1,0 +1,9 @@
+.NewResume {
+    cursor: pointer;
+    color: white;
+    background: blue;
+}
+
+.NewResume:hover {
+    background: blueviolet;
+}

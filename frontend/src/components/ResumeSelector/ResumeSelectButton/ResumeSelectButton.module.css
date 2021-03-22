@@ -1,0 +1,20 @@
+.button {
+    background: blue;
+    color: white;
+    border: 1px solid black;
+}
+
+/* .button:hover { 
+    background: lightblue;
+    cursor: pointer;
+} */
+
+.selectResume:hover {
+    background: yellowgreen;
+    cursor: pointer;
+}
+
+.deleteResume:hover{ 
+    background: red;
+    cursor: pointer;
+}
