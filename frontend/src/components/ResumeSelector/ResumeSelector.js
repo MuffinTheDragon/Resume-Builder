@@ -53,7 +53,7 @@ const ResumeSelector = () => {
     const selectResumeHandler = (resumeID) => {
         cookies.remove("resumeID");
         cookies.set("resumeID", resumeID);
-        history.push("/resume");
+        history.replace("/resume");
         history.go(0);
     };
 
@@ -75,6 +75,13 @@ const ResumeSelector = () => {
         return <ResumeSelectButton selectResume={() => selectResumeHandler(val._id)} deleteResume={() => deleteResumeHandler(val._id)} key={id} resumeid={val._id}>Resume</ResumeSelectButton>
     });
 
+    const logout = () => {
+        cookies.remove("resumeID");
+        cookies.remove("userID");
+        history.replace("/login");
+        history.go(0);
+    };
+
     return (
         <div>
             {templates.length === 0 ? (
@@ -89,6 +96,7 @@ const ResumeSelector = () => {
             )
         }
         <div onClick={() => createResumeHandler()} className={styles.NewResume}> New Resume + </div>
+        <div onClick={() => logout()} className={styles.Logout}>LOGOUT</div>
         </div>
     )
 };

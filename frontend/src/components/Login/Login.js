@@ -49,7 +49,7 @@ const Login = (props) => {
               await sendLoginRequest(idToken, result.user.email, result.user.displayName);
               cookies.set('userID', result.user.uid);
               // cookies.set('resumeID', "");
-              history.push("/select");
+              history.replace("/select");
             } catch (error) {
               alert("Login failed")
               console.error({message: "Login failed", error})

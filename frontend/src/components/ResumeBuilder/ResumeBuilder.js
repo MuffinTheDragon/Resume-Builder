@@ -16,7 +16,7 @@ const ResumeBuilder = ({resume}) => {
     const history = new useHistory();
     const selectResumeHandler = () => {
         cookies.remove("resumeID");
-        history.push("/select");
+        history.replace("/select");
     }
 
     return ( 

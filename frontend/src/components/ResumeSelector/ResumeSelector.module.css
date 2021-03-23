@@ -7,3 +7,13 @@
 .NewResume:hover {
     background: blueviolet;
 }
+
+.Logout {
+    background: red;
+    color: white;
+}
+
+.Logout:hover {
+    background: rebeccapurple;
+    cursor: pointer;
+}
