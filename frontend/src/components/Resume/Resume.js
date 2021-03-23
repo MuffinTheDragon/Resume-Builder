@@ -31,51 +31,53 @@ const Resume = () => {
     let resume = resumeState;
     let component;
     for (let key in resume) {
-        // Rendering the header if there is data available to process
-        if ((key === "Hobbies" && resume["Hobbies"].length >= 1 && resume["Hobbies"][0] !== "") ||
-         (key !== "Personal" && resume[key].length !== 0) && key !== "Hobbies"){
-            let header = key.replace(/([A-Z])/g, ' $1').replace(/^./, ((str) => {
-                return str.toUpperCase();
-            }));
-            resumeComponents[key].push(<HeaderTemplate key={header} header={header}/>)
-        }
-
-        for (let i=0; i < resume[key].length; i++){
-            let data = resume[key][i];
-            let isCollection = false;
-            switch(key) {
-                case "Projects":
-                case "Experience":
-                    let location = "";
-                    if (data.location !== undefined) {
-                        location = data.location;
-                    }
-                    component = <ExperienceTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} location={location} desc={data.desc}/>
-                    break;
-                case "Achievements":
-                    component = <AchievementsTemplate key={i} title={data.title} desc={data.desc} />
-                    break;
-                case "CourseWork":
-                case "Skills":
-                    isCollection = !isCollection;
-                    component = <CollectionTemplate key={i} items={resume[key]}/>
-                    break;
-                case "Hobbies":
-                    isCollection = !isCollection;
-                    component = <HobbiesTemplate key={i} hobbies={resume[key]}/>
-                    break;
-                case "Clubs":
-                    component = <ClubsTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} desc={data.desc}/>
-                    break;
-                case "Hackathons":
-                    component = <HackathonTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} desc={data.desc}/>
-                    break;
-                default:
-                    break;            
+        if (key !== "userid" && key !=="_id" && key !=="__v"){
+            // console.log(key);
+            // Rendering the header if there is data available to process
+            if ((key === "Hobbies" && resume["Hobbies"].length >= 1 && resume["Hobbies"][0] !== "") ||
+            (key !== "Personal" && resume[key].length !== 0) && key !== "Hobbies"){
+                let header = key.replace(/([A-Z])/g, ' $1').replace(/^./, ((str) => {
+                    return str.toUpperCase();
+                }));
+                resumeComponents[key].push(<HeaderTemplate key={header} header={header}/>)
             }
-            resumeComponents[key].push(component);
-            if (isCollection){
-                break;
+            for (let i=0; i < resume[key].length; i++){
+                let data = resume[key][i];
+                let isCollection = false;
+                switch(key) {
+                    case "Projects":
+                    case "Experience":
+                        let location = "";
+                        if (data.location !== undefined) {
+                            location = data.location;
+                        }
+                        component = <ExperienceTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} location={location} desc={data.desc}/>
+                        break;
+                    case "Achievements":
+                        component = <AchievementsTemplate key={i} title={data.title} desc={data.desc} />
+                        break;
+                    case "CourseWork":
+                    case "Skills":
+                        isCollection = !isCollection;
+                        component = <CollectionTemplate key={i} items={resume[key]}/>
+                        break;
+                    case "Hobbies":
+                        isCollection = !isCollection;
+                        component = <HobbiesTemplate key={i} hobbies={resume[key]}/>
+                        break;
+                    case "Clubs":
+                        component = <ClubsTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} desc={data.desc}/>
+                        break;
+                    case "Hackathons":
+                        component = <HackathonTemplate key={i} title={data.title} subtitle={data.subtitle} startDate={data.startDate} endDate={data.endDate} desc={data.desc}/>
+                        break;
+                    default:
+                        break;            
+                }
+                resumeComponents[key].push(component);
+                if (isCollection){
+                    break;
+                }
             }
         }
     }

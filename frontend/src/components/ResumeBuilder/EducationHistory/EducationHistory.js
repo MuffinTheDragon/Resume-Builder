@@ -18,8 +18,8 @@ let skillOptions = ["Python", "MySQL", "NoSQL", "REST", "Spring", "JavaScript", 
 const renderOptions = (skillOptions) => {
     return skillOptions.map((skill) => {
         return {value: skill, label: skill};
-    })
-}
+    });
+};
 
 // styling htmlFor the select box
 const customStyles = {
@@ -68,6 +68,9 @@ const EducationHistory = () => {
         const newResumeState = {...resumeState, CourseWork: newSelectedCourseWork};
         setResume(newResumeState);
     };
+
+    console.log(resumeState.EducationHistory.gpa);
+    console.log(resumeState.CourseWork);
 
     const setSkills = (selectedSkills) => {
         const newSelectedSkills = selectedSkills.map((skillObj) => {

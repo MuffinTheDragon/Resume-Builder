@@ -8,10 +8,20 @@ import Personal from "./Personal/Personal";
 import EducationHistory from "./EducationHistory/EducationHistory";
 import Additional from "./Additional/Additional";
 import Experience from "./Experience/Experience";
+import { useHistory } from "react-router-dom";
+import Cookies from 'universal-cookie';
 
 const ResumeBuilder = ({resume}) => {
+    const cookies = new Cookies();
+    const history = new useHistory();
+    const selectResumeHandler = () => {
+        cookies.remove("resumeID");
+        history.replace("/select");
+    }
+
     return ( 
         <div className={"p-3 " + styles.ResumeBuilder}>
+            <h1 onClick={() => selectResumeHandler()} className={styles.goBack}>Go Back</h1>
             <form>
                 <h1 className={styles.ResumeBuilder}>Personal <FontAwesomeIcon icon={faUser} /></h1>
                 <hr className={styles.ResumeBuilder} />
