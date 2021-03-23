@@ -13,6 +13,15 @@ import HobbiesTemplate from "./HobbiesTemplate/HobbiesTemplate";
 import { ResumeContext } from "../../App";
 import Clubs from '../ResumeBuilder/Additional/AdditionalGroup/Forms/Clubs/Clubs';
 import HackathonTemplate from './HackathonTemplate/HackathonTemplate';
+import Pdf from "react-to-pdf";
+import { library } from "@fortawesome/fontawesome-svg-core";
+
+
+const ref = React.createRef();
+
+export function AddToLibrary(icon) {
+    library.add(icon);
+}
 
 const Resume = () => {
     const resumeComponents = {
@@ -83,25 +92,30 @@ const Resume = () => {
     }
     return (
         <div id={styles.ResumeRender}>
-            <PersonalTemplate fname={resume.Personal.fname} lname={resume.Personal.lname} email={resume.Personal.email} telephone={resume.Personal.telephone} website={resume.Personal.website} github={resume.Personal.github}/>
-            <div className="d-flex pl-5 pr-5 pb-5">
-                <div className={"mr-3 " + styles.w65}>
-                    {resumeComponents.Experience}
-                    {resumeComponents.Projects}
-                    {resumeComponents.Clubs}
-                    {resumeComponents.Hackathons}
-                </div>
-                <div className={styles.w35}>
-                {resume["EducationHistory"].school === "" || Object.keys(resume["EducationHistory"]).length === 0 ? '' :
-                <>
-                <HeaderTemplate header={"Education History"}/>
-                <EducationTemplate school={resume.EducationHistory.school} degree={resume.EducationHistory.degree} start_date={resume.EducationHistory.startDate} end_date={resume.EducationHistory.endDate} gpa={resume.EducationHistory.gpa}/>
-                </>
-                }
-                {resumeComponents.Achievements}
-                {resumeComponents.Hobbies}
-                {resumeComponents.Skills}
-                {resumeComponents.CourseWork}
+            <Pdf targetRef={ref} filename="Resume.pdf" x={.8} y={.8} scale={1}>
+                {({ toPdf }) => <button class="pdfButton" onClick={toPdf}>Generate PDF</button>}
+            </Pdf>
+            <div ref={ref}>
+                <PersonalTemplate fname={resume.Personal.fname} lname={resume.Personal.lname} email={resume.Personal.email} telephone={resume.Personal.telephone} website={resume.Personal.website} github={resume.Personal.github}/>
+                <div className="d-flex pl-5 pr-5 pb-5">
+                    <div className={"mr-3 " + styles.w65}>
+                        {resumeComponents.Experience}
+                        {resumeComponents.Projects}
+                        {resumeComponents.Clubs}
+                        {resumeComponents.Hackathons}
+                    </div>
+                    <div className={styles.w35}>
+                        {resume["EducationHistory"].school === "" || Object.keys(resume["EducationHistory"]).length === 0 ? '' :
+                        <>
+                        <HeaderTemplate header={"Education History"}/>
+                        <EducationTemplate school={resume.EducationHistory.school} degree={resume.EducationHistory.degree} start_date={resume.EducationHistory.startDate} end_date={resume.EducationHistory.endDate} gpa={resume.EducationHistory.gpa}/>
+                        </>
+                        }
+                        {resumeComponents.Achievements}
+                        {resumeComponents.Hobbies}
+                        {resumeComponents.Skills}
+                        {resumeComponents.CourseWork}
+                    </div>
                 </div>
             </div>
         </div>
