@@ -75,7 +75,7 @@ app.use(
     cors({
       origin: "http://localhost:3000", // allow to server to accept request from different origin
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-      credentials: true // allow session cookie from browser to pass through
+    //   credentials: true // allow session cookie from browser to pass through
     })
   );
 
@@ -92,12 +92,17 @@ const verifyAuthentication = (req, res, next) => {
         .auth()
         .verifySessionCookie(sessionCookie, true /** checkRevoked */)
         .then((decodedClaims) => {
-
-            next();
+            console.log("----------");
+            console.log(decodedClaims);
+            if(decodedClaims){
+                next();
+            } else {
+                res.redirect('http://localhost:3000/login');
+            }
         })
         .catch((error) => {
         // Session cookie is unavailable or invalid. Force user to login.
-        res.redirect('/login');
+        res.redirect('http://localhost:3000/login');
         });
 }
 
@@ -121,11 +126,11 @@ app.post("/api/login", async (req, res) => {
             .createSessionCookie(idToken, { expiresIn })
             .then(
                 (sessionCookie) => {
+                    console.log("-----------");
                     const options = { maxAge: expiresIn, httpOnly: true };
                     res.cookie("session", sessionCookie, options);
                     res.end("Success");
-
-                    
+                    console.log(req.cookies.session)
                 },
                 (error) => {
                     res.status(401).send("Unauthorized");
@@ -158,9 +163,11 @@ app.get("/api/logout", (req, res) => {
 
 
 // POST 
-app.post('/Template',  async (req, res) => {
+app.post('/Template', async (req, res) => {
 
-    if (!req.user) {
+    console.log(req.params.userid)
+    console.log(req.params);
+    if (!req.body.userid) {
         res.status(401).send()
         return;
     }
@@ -193,8 +200,9 @@ app.post('/Template',  async (req, res) => {
 app.get('/Template/getAll/:user_id', async (req, res) => {
 
     const user_id = req.params.user_id;
-
-    if (!req.user) {
+    console.log(user_id);
+    // console.log(req.params.user_id);
+    if (!req.params.user_id) {
         res.status(401).send()
         return;
     }
@@ -206,13 +214,13 @@ app.get('/Template/getAll/:user_id', async (req, res) => {
         return;
     }
 
-    if (!ObjectID(user_id)) {
-        res.status(404).send()
-        return;
-    }
+    // if (!ObjectID(user_id)) {
+    //     res.status(404).send()
+    //     return;
+    // }
 
     try {
-        const template = await Template.find({ userid: req.user }); 
+        const template = await Template.find({ userid: user_id }); 
         
         if (!template) {
             res.status(404).send()
@@ -231,11 +239,12 @@ app.get('/Template/getAll/:user_id', async (req, res) => {
 })
 
 // GET the templates 
-app.get('/Template/:template_id', async (req, res) => {
+app.get('/Template/:template_id/:user_id', async (req, res) => {
 
     const _id = req.params.template_id;
-
-    if (!req.user) {
+    console.log(_id);
+    console.log(req.params.user_id);
+    if (!req.params.user_id) {
         res.status(401).send()
         return;
     }
@@ -256,7 +265,7 @@ app.get('/Template/:template_id', async (req, res) => {
         const template = await Template.findById(_id)
         if (!template) {
             res.status(404).send()
-        } else if(template.userid.id == req.user.id) {
+        } else if(template.userid == req.params.user_id) {
             res.send(template)
         } else {
             console.log("there");
@@ -278,7 +287,8 @@ app.put("/Template/:template_id", async (req, res) => {
 
     const _template_id = req.params.template_id;
 
-    if (!req.user) {
+
+    if (!req.body.userid) {
         res.status(401).send()
         return;
     }
@@ -294,8 +304,7 @@ app.put("/Template/:template_id", async (req, res) => {
         res.status(401).send()
         return;
     }
-
-    const template = await Template.findOne({ _id: _template_id, userid: req.user })
+    const template = await Template.findOne({ _id: _template_id, userid: req.body.userid })
     if (!template) {
         res.status(401).send()
         return;
@@ -308,6 +317,7 @@ app.put("/Template/:template_id", async (req, res) => {
         res.status(200).send("Updated")
 
     } catch (error) {
+        console.log(error);
         if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
             res.status(500).send('Internal server error')
         } else {
@@ -318,10 +328,13 @@ app.put("/Template/:template_id", async (req, res) => {
 
 
 // DELETE 
-app.delete('/Template/:template_id', async (req, res) => {
+app.delete('/Template/:template_id/:userid', async (req, res) => {
 	const _template_id = req.params.template_id
 
-    if (!req.user) {
+    console.log(req.params.userid)
+    if (!req.params.userid) {
+        // console.log(req);
+        console.log("1");
         res.status(401).send()
         return;
     }
@@ -332,20 +345,22 @@ app.delete('/Template/:template_id', async (req, res) => {
 		res.status(500).send('Internal server error')
 		return;
 	}
-
     if (!ObjectID(_template_id)) {
 		res.status(404).send()
 		return;
 	}
-
-    const template = await Template.findOne({ _id: _template_id, userid: req.user })
+    console.log(_template_id);
+    console.log(req.params.userid);
+    const template = await Template.findOne({ _id: _template_id, userid: req.params.userid })
     if (!template) {
-        res.status(401).send()
+        console.log("2");
+        res.status(404).send()
         return;
     }
 
 	try {
         Template.deleteOne({"_id": ObjectID(_template_id)}).then((result) =>{
+            
             if (result.deletedCount === 0) {
                 res.status(404).send(); 
                 return; 
@@ -382,7 +397,7 @@ async function makeTemplate(req) {
     const final = createSubSchema(req).then(result => {
 
         const template = new Template({
-            userid: req.user,
+            userid: req.body.userid,
             Personal: {
                 fname: req.body.Personal.fname,
                 lname: req.body.Personal.lname,
@@ -391,7 +406,7 @@ async function makeTemplate(req) {
                 website: req.body.Personal.website,
                 github: req.body.Personal.github
             },
-            Experiences: result[0],
+            Experience: result[0],
             Projects: result[1],
             Achievements: result[2],
             EducationHistory: {
@@ -419,6 +434,7 @@ async function updateTemplate(req, template) {
 
     const final = createSubSchema(req).then(result => {
 
+        template.userid=req.body.userid;
         template.Personal.fname=req.body.Personal.fname;
         template.Personal.lname=req.body.Personal.lname;
         template.Personal.email=req.body.Personal.email;
@@ -427,7 +443,7 @@ async function updateTemplate(req, template) {
         template.Personal.github=req.body.Personal.github;
         template.Experience=result[0];
         template.Projects=result[1];
-        template.Achievement=result[2];
+        template.Achievements=result[2];
         template.EducationHistory.school=req.body.EducationHistory.school;
         template.EducationHistory.degree=req.body.EducationHistory.degree;
         template.EducationHistory.startDate=req.body.EducationHistory.startDate;
@@ -457,16 +473,16 @@ async function createSubSchema(req) {
     let clubs_num = 0
     let hackathons_num = 0
 
-    if (req.body.Experiences) {
-        experience_num = req.body.Experiences.length
+    if (req.body.Experience) {
+        experience_num = req.body.Experience.length
     }
 
     if (req.body.Projects) {
         project_num = req.body.Projects.length
     }
     
-    if (req.body.Achievement) {
-        achievement_num = req.body.Achievement.length
+    if (req.body.Achievements) {
+        achievement_num = req.body.Achievements.length
     }
 
     if (req.body.Clubs) {
@@ -486,12 +502,12 @@ async function createSubSchema(req) {
     for (let i = 0; i < experience_num; i++) {
         let experience = new Experience({
             id: req.body.Experience[i].id,
-            title: req.body.Experiences[i].title,
-            subtitle: req.body.Experiences[i].subtitle,
-            startDate: req.body.Experiences[i].startDate,
-            endDate: req.body.Experiences[i].endDate,
-            location: req.body.Experiences[i].location,
-            desc: req.body.Experiences[i].desc,
+            title: req.body.Experience[i].title,
+            subtitle: req.body.Experience[i].subtitle,
+            startDate: req.body.Experience[i].startDate,
+            endDate: req.body.Experience[i].endDate,
+            location: req.body.Experience[i].location,
+            desc: req.body.Experience[i].desc,
         })
         experience_array.push(experience)
     }
@@ -510,9 +526,9 @@ async function createSubSchema(req) {
 
     for (let k = 0; k < achievement_num; k++) {
         let achievement = new Achievement({
-            id: req.body.Achievement[k].id,
-            title: req.body.Achievement[k].title,
-            desc: req.body.Achievement[k].desc,
+            id: req.body.Achievements[k].id,
+            title: req.body.Achievements[k].title,
+            desc: req.body.Achievements[k].desc,
         })
         achievement_array.push(achievement)
     }

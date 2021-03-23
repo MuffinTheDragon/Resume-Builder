@@ -3,9 +3,11 @@ import { useHistory } from "react-router-dom";
 import "./Login.css";
 import {auth, firebase} from "../../firebase";
 import {UserIDContext} from "../../App";
-
 import GoogleButton from 'react-google-button';
+import Cookies from 'universal-cookie';
+
 const Login = (props) => {
+    const cookies = new Cookies();
     const {_, setUserID} = useContext(UserIDContext);
 
     async function sendLoginRequest(idToken, email, displayName) {
@@ -22,9 +24,8 @@ const Login = (props) => {
                 Accept: "application/json, text/plain, */*",
                 "Content-Type": "application/json"
             }
-        })
+        });
         const response = await fetch(request);
-        console.log(response)
         if (response.status === 401) {
           throw new Error("auth failed")
         }
@@ -42,18 +43,17 @@ const Login = (props) => {
         async (result) => {
             const idToken = await firebase.auth().currentUser.getIdToken()
             console.log({idToken})
-            setUserID(result.user.uid);
             console.log(result.user)
             console.log(result.user.email, result.user.displayName)
-
             try {
               await sendLoginRequest(idToken, result.user.email, result.user.displayName);
-              history.push("/resume")
+              cookies.set('userID', result.user.uid);
+              // cookies.set('resumeID', "");
+              history.replace("/select");
             } catch (error) {
               alert("Login failed")
               console.error({message: "Login failed", error})
             }
-            // redirect to jadlsfjldsfj page
         },
         function (error) {
           console.error(error);
