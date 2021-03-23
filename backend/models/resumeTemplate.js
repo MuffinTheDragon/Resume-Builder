@@ -193,7 +193,7 @@ const TemplateSchema = new mongoose.Schema({
             trim: true
         },
     },
-    Experiences: {
+    Experience: {
         type: [ExperienceSchema],
         required: false
     },
@@ -216,12 +216,12 @@ const TemplateSchema = new mongoose.Schema({
             required: false,
             trim: true
         },
-        start_date: {
-            type: Date,
+        startDate: {
+            type: String,
             required: false
         },
-        end_date: {
-            type: Date,
+        endDate: {
+            type: String,
             required: false
         },
         gpa: {

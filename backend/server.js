@@ -317,6 +317,7 @@ app.put("/Template/:template_id", async (req, res) => {
         res.status(200).send("Updated")
 
     } catch (error) {
+        console.log(error);
         if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
             res.status(500).send('Internal server error')
         } else {
@@ -405,7 +406,7 @@ async function makeTemplate(req) {
                 website: req.body.Personal.website,
                 github: req.body.Personal.github
             },
-            Experiences: result[0],
+            Experience: result[0],
             Projects: result[1],
             Achievements: result[2],
             EducationHistory: {
@@ -442,7 +443,7 @@ async function updateTemplate(req, template) {
         template.Personal.github=req.body.Personal.github;
         template.Experience=result[0];
         template.Projects=result[1];
-        template.Achievement=result[2];
+        template.Achievements=result[2];
         template.EducationHistory.school=req.body.EducationHistory.school;
         template.EducationHistory.degree=req.body.EducationHistory.degree;
         template.EducationHistory.startDate=req.body.EducationHistory.startDate;
@@ -472,16 +473,16 @@ async function createSubSchema(req) {
     let clubs_num = 0
     let hackathons_num = 0
 
-    if (req.body.Experiences) {
-        experience_num = req.body.Experiences.length
+    if (req.body.Experience) {
+        experience_num = req.body.Experience.length
     }
 
     if (req.body.Projects) {
         project_num = req.body.Projects.length
     }
     
-    if (req.body.Achievement) {
-        achievement_num = req.body.Achievement.length
+    if (req.body.Achievements) {
+        achievement_num = req.body.Achievements.length
     }
 
     if (req.body.Clubs) {
@@ -501,12 +502,12 @@ async function createSubSchema(req) {
     for (let i = 0; i < experience_num; i++) {
         let experience = new Experience({
             id: req.body.Experience[i].id,
-            title: req.body.Experiences[i].title,
-            subtitle: req.body.Experiences[i].subtitle,
-            startDate: req.body.Experiences[i].startDate,
-            endDate: req.body.Experiences[i].endDate,
-            location: req.body.Experiences[i].location,
-            desc: req.body.Experiences[i].desc,
+            title: req.body.Experience[i].title,
+            subtitle: req.body.Experience[i].subtitle,
+            startDate: req.body.Experience[i].startDate,
+            endDate: req.body.Experience[i].endDate,
+            location: req.body.Experience[i].location,
+            desc: req.body.Experience[i].desc,
         })
         experience_array.push(experience)
     }
@@ -525,9 +526,9 @@ async function createSubSchema(req) {
 
     for (let k = 0; k < achievement_num; k++) {
         let achievement = new Achievement({
-            id: req.body.Achievement[k].id,
-            title: req.body.Achievement[k].title,
-            desc: req.body.Achievement[k].desc,
+            id: req.body.Achievements[k].id,
+            title: req.body.Achievements[k].title,
+            desc: req.body.Achievements[k].desc,
         })
         achievement_array.push(achievement)
     }
