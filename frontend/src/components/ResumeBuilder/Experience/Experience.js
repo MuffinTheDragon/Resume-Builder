@@ -27,7 +27,7 @@ const Experience = () => {
         setResume(updatedResumeState);
     };
 
-
+    return (
         <Row>
             <Col >
                 {experiences}
