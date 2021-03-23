@@ -17,11 +17,16 @@ hr.ResumeBuilder {
 }
 
 .goBack{
-    background: lightblue;
+    background: lightskyblue;
     color: white;
+    width: fit-content;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 16px;
 }
 
 .goBack:hover{
-    background: blue;
+    background: lightblue;
     cursor: pointer;
 }

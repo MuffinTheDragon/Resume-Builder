@@ -1,7 +1,54 @@
 .button {
-    background: blue;
-    color: white;
+    background: white;
+    color: black;
     border: 1px solid black;
+    width: 15vw;
+    height: 40vh;
+    margin: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap:wrap;
+    transition: 0.3s;
+    font-size: 16px;
+    border-radius: 5px;
+    -webkit-box-shadow: 5px 5px 10px 0px #535353; 
+    box-shadow: 5px 5px 10px 0px #535353;
+}
+
+.modal {
+    font-size: 16px !important;
+}
+
+/* .button button svg {
+    margin-right: 10px;
+} */
+
+.button button {
+    display: none;
+    margin: 5px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+}
+
+.select{
+    background-color: rgb(58, 58, 83);
+    color: white;
+    border: none;
+}
+
+.delete{
+    border: 1px solid red;
+    background-color: white;
+    color: red;
+
+}
+
+.button:hover button {
+    display:block;
 }
 
 /* .button:hover { 
@@ -9,10 +56,10 @@
     cursor: pointer;
 } */
 
-.selectResume:hover {
+/* .selectResume:hover {
     background: yellowgreen;
     cursor: pointer;
-}
+} */
 
 .deleteResume:hover{ 
     background: red;

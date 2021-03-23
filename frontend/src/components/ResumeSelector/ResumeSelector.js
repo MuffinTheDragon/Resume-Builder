@@ -90,7 +90,7 @@ const ResumeSelector = () => {
                     Click [New Resume +] to get started!
                 </div>
             ) : (
-                <div>
+                <div id={styles.resumeList}>
                     {templateButtons}
                 </div>
             )

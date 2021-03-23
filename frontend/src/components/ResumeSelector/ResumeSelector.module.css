@@ -17,3 +17,9 @@
     background: rebeccapurple;
     cursor: pointer;
 }
+
+#resumeList {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}

@@ -1,18 +1,37 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from './ResumeSelectButton.module.css';
+import { Button, Modal } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 
 const ResumeSelectButton = (props) => {
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     return (
-        <div className={styles.button}>
-            <div onClick={props.selectResume} className={styles.selectResume}>
-                Select Resume
+        <>
+            <Modal show={show} onHide={handleClose} className={styles.modal}>
+                <Modal.Header closeButton>
+                <Modal.Title>Delete Resume</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Are you sure you want to delete this resume? It will be gone forever (a very long time!)</Modal.Body>
+                <Modal.Footer>
+                <Button variant="outline-secondary" onClick={handleClose}>
+                    Cancel
+                </Button>
+                <Button variant="danger" onClick={props.deleteResume}>
+                    Delete
+                </Button>
+                </Modal.Footer>
+            </Modal>
+            <div className={styles.button}>
+                <h3>{props.children}</h3> <br/>
+                <Button onClick={props.selectResume}>Edit</Button>
+                <Button variant="outline-danger" onClick={handleShow}>Delete</Button>
             </div>
-            {props.children} <br/>
-            {props.resumeid}
-            <div onClick={props.deleteResume} className={styles.deleteResume}>
-                Delete Resume
-            </div>
-        </div>
+        </>
     )
 };
 
