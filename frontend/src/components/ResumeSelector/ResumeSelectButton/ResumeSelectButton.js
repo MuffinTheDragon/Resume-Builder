@@ -10,6 +10,11 @@ const ResumeSelectButton = (props) => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const deleteResume = () => {
+        props.deleteResume();
+        handleClose();
+    }
+
     return (
         <>
             <Modal show={show} onHide={handleClose} className={styles.modal}>
@@ -21,7 +26,7 @@ const ResumeSelectButton = (props) => {
                 <Button variant="outline-secondary" onClick={handleClose}>
                     Cancel
                 </Button>
-                <Button variant="danger" onClick={props.deleteResume}>
+                <Button variant="danger" onClick={deleteResume}>
                     Delete
                 </Button>
                 </Modal.Footer>
