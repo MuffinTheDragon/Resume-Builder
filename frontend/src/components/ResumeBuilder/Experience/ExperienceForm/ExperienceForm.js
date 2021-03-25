@@ -31,6 +31,7 @@ const ExperienceForm = ({id}) => {
         let updatedExperience = [...resumeState.Experience].filter(experience => experience.id !== id);
         const newResumeState = {...resumeState, Experience: updatedExperience};
         setResume(newResumeState);
+        handleClose();
     }
 
     const getDesc = (data) => {
