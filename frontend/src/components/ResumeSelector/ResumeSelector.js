@@ -5,6 +5,7 @@ import ResumeSelectButton from "./ResumeSelectButton/ResumeSelectButton";
 import styles from "./ResumeSelector.module.css";
 import UserIDContext from "../../App";
 import Cookies from 'universal-cookie';
+import logo from '../../images/Cheddar-Logo.png';
 
 let baseResumeTemplate = {
     userid: "",
@@ -83,20 +84,36 @@ const ResumeSelector = () => {
     };
 
     return (
-        <div>
-            {templates.length === 0 ? (
-                <div>
-                    You have no resumes to select from...<br/>
-                    Click [New Resume +] to get started!
+        <div className={styles.MainPage}>
+            <header className={styles.ChedHeader}>
+                <div className={styles.LogoDiv}>
+                    <img className={styles.logo} src={logo} />
                 </div>
-            ) : (
-                <div id={styles.resumeList}>
-                    {templateButtons}
+                <div className={styles.UtilityNav}>
+                    <div onClick={() => logout()} className={styles.Logout}>Logout</div>
                 </div>
-            )
-        }
-        <div onClick={() => createResumeHandler()} className={styles.NewResume}> New Resume + </div>
-        <div onClick={() => logout()} className={styles.Logout}>LOGOUT</div>
+                
+            </header>
+            <div className={styles.dashboard}>
+                <div className={styles.DashHeader}>
+                    <div className={styles.SelectHeader}>
+                        Saved Resumes
+                    </div>
+                    <div onClick={() => createResumeHandler()} className={styles.NewResume}> New Resume + </div>
+                </div>
+                <hr></hr>
+                {templates.length === 0 ? (
+                    <div className={styles.NoResume}>
+                        You have no resumes to select from...<br/>
+                        Click [New Resume +] to get started!
+                    </div>
+                ) : (
+                    <div id={styles.resumeList}>
+                        {templateButtons}
+                    </div>
+                )
+                }
+            </div>
         </div>
     )
 };
