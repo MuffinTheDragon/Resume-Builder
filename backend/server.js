@@ -1,5 +1,5 @@
 "use strict";
-
+const log = console.log();
 // read the environment variable (will be 'production' in production mode)
 // const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser"); // parse cookie header
@@ -201,7 +201,6 @@ app.get('/Template/getAll/:user_id', async (req, res) => {
 
     const user_id = req.params.user_id;
     console.log(user_id);
-    // console.log(req.params.user_id);
     if (!req.params.user_id) {
         res.status(401).send()
         return;
@@ -209,7 +208,7 @@ app.get('/Template/getAll/:user_id', async (req, res) => {
 
     // check mongoose connection established.
     if (mongoose.connection.readyState != 1) {
-        log('Issue with mongoose connection')
+        // log('Issue with mongoose connection')
         res.status(500).send('Internal server error')
         return;
     }
@@ -309,7 +308,6 @@ app.put("/Template/:template_id", async (req, res) => {
         res.status(401).send()
         return;
     }
-
     let updated = await updateTemplate(req, template);
 
     try {
@@ -431,7 +429,7 @@ async function makeTemplate(req) {
 }
 
 async function updateTemplate(req, template) {
-
+    console.log(template)
     const final = createSubSchema(req).then(result => {
 
         template.userid=req.body.userid;
@@ -537,6 +535,7 @@ async function createSubSchema(req) {
         let clubs = new Clubs({
             id: req.body.Clubs[l].id,
             title: req.body.Clubs[l].title,
+            subtitle: req.body.Clubs[l].subtitle,
             startDate: req.body.Clubs[l].startDate,
             endDate: req.body.Clubs[l].endDate,
             desc: req.body.Clubs[l].desc,

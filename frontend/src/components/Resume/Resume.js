@@ -93,7 +93,7 @@ const Resume = () => {
     return (
         <div id={styles.ResumeRender}>
             <Pdf targetRef={ref} filename="Resume.pdf" x={.8} y={.8} scale={1}>
-                {({ toPdf }) => <button class="pdfButton" onClick={toPdf}>Generate PDF</button>}
+                {({ toPdf }) => <button className="pdfButton" onClick={toPdf}>Generate PDF</button>}
             </Pdf>
             <div ref={ref}>
                 <PersonalTemplate fname={resume.Personal.fname} lname={resume.Personal.lname} email={resume.Personal.email} telephone={resume.Personal.telephone} website={resume.Personal.website} github={resume.Personal.github}/>
