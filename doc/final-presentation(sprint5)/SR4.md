@@ -1,4 +1,4 @@
-# Sprint3 Retrospective Meeting
+# Sprint4 Retrospective Meeting
 
 ## Attendance and Participation
 
@@ -30,16 +30,14 @@
 ## What are some new practices that you might want to use during next sprint
 
 - Add linter to code to standardize coding practices & formatting
-- Thourough testing of all implementations to ensure minimal bugs
+- Thorough testing of all implementations to ensure minimal bugs
 
 ## What are (if any) harmful practices you should stop using during next sprint
 
-- Not giving ample amount of time for multiple group members to evaluate pull requests
-- Not giving ample amount of time to consolidate/refactor code from multiple group members' different tasks
-- Not having a standardized/same naming syntax for variables/styles
+- Not having a standardized naming syntax
 
-## What was your best/worst experience during sprint 3?
+## What was your best/worst experience during sprint 4?
 
-**Best**: Team bonding and playing Super Seducer and learning that if they don't have a SteamID you shouldn't try and seduce them
+**Best**: Catching pokemon using Poketwo bot ;) Also basically completing our project
 
-**Worst**: Running low on time for the sprint because there were other assignments due
+**Worst**: Running low on time for the sprint because there were other assignments due (as always)
