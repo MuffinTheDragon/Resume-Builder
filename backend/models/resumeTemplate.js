@@ -39,7 +39,7 @@ const ExperienceSchema = new mongoose.Schema({
         type: [String],
         required: false
     }
-})
+}, {versionKey: false})
 
 // Creating the project template through mongoose schema
 const ProjectSchema = new mongoose.Schema({
@@ -72,7 +72,7 @@ const ProjectSchema = new mongoose.Schema({
         type: [String],
         required: false
     }
-})
+}, {versionKey: false})
 
 // Creating the achievement template through mongoose schema
 const AchievementSchema = new mongoose.Schema({
@@ -91,7 +91,7 @@ const AchievementSchema = new mongoose.Schema({
         required: false,
         trim: false
     }
-})
+}, {versionKey: false})
 
 // Creating the achievement template through mongoose schema
 const ClubsSchema = new mongoose.Schema({
@@ -118,8 +118,12 @@ const ClubsSchema = new mongoose.Schema({
     desc: {
         type: [String],
         required: false,
+    },
+    subtitle: {
+        type: String,
+        required: false,
     }
-})
+}, {versionKey: false})
 
 // Creating the achievement template through mongoose schema
 const HackathonsSchema = new mongoose.Schema({
@@ -152,7 +156,7 @@ const HackathonsSchema = new mongoose.Schema({
         type: [String],
         required: false,
     }
-})
+}, {versionKey: false})
 
 // Creating the resume template through mongoose schema
 const TemplateSchema = new mongoose.Schema({
@@ -249,7 +253,7 @@ const TemplateSchema = new mongoose.Schema({
         type: [HackathonsSchema],
         required: false
     }
-})
+}, {versionKey: false})
 
 // make models using schemas
 const Template = mongoose.model('Template', TemplateSchema)

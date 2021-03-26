@@ -10,7 +10,7 @@ import ResumeSelector from "./components/ResumeSelector/ResumeSelector";
 import Cookies from 'universal-cookie';
 
 let ResumeTemplate = {
-    userid: "Gcdh2MbzojTueOZhfvlgLAEaNDO2",
+    userid: "",
     Personal: {
         fname: "",
         lname: "",
@@ -49,13 +49,14 @@ const App = () => {
     useEffect(() => {
         let fetchData = async() => {
             await axios.get(`/Template/${selectedResumeID}/${selectedUserID}`).then((result => {
-                console.log(result.data);
                 setResume(result.data);
             }));
         }
         fetchData();
     }, [])
+
     const reducer = (_, newState)  => {
+        newState.userid = selectedUserID
         axios.put(`/Template/${selectedResumeID}`, newState)
         .then((response) => {
             console.log(response);
